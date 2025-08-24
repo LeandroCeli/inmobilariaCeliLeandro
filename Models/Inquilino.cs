@@ -9,8 +9,11 @@ public class Inquilino
     [Required, StringLength(15)]
     public string DNI { get; set; } = string.Empty;
 
-    [Required, StringLength(100)]
-    public string NombreCompleto { get; set; } = string.Empty;
+    [Required, StringLength(50)]
+    public string Apellido { get; set; } = string.Empty;
+
+    [Required, StringLength(50)]
+    public string Nombre { get; set; } = string.Empty;
 
     [EmailAddress, StringLength(100)]
     public string? Email { get; set; }
