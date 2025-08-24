@@ -1,0 +1,43 @@
+# -----------------------
+# Archivos de compilación
+# -----------------------
+bin/
+obj/
+
+# -----------------------
+# Configuración de usuario / IDE
+# -----------------------
+.vs/
+.vscode/
+*.user
+*.suo
+
+# -----------------------
+# Archivos de logs y temporales
+# -----------------------
+*.log
+*.tmp
+
+# -----------------------
+# Archivos de dependencias locales
+# -----------------------
+/packages/
+*.nupkg
+
+# -----------------------
+# Archivos sensibles de configuración
+# -----------------------
+appsettings.*.local.json
+
+# -----------------------
+# Archivos de base de datos (MariaDB no genera archivo físico aquí, pero por las dudas)
+# -----------------------
+*.db
+*.sql~
+*.sql.bak
+
+# -----------------------
+# Otros innecesarios
+# -----------------------
+Thumbs.db
+.DS_Store
