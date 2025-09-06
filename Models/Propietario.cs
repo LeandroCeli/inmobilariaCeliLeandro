@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Inmobiliaria.Web.Models;
+namespace inmobilariaCeli.Models;
 
 public class Propietario
 {

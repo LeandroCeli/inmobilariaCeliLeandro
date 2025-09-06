@@ -1,0 +1,38 @@
+@model IEnumerable<inmobilariaCeli.Models.Propietario>
+
+<h2>Propietarios</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Propietario</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>DNI</th>
+            <th>Apellido</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.DNI</td>
+            <td>@item.Apellido</td>
+            <td>@item.Nombre</td>
+            <td>@item.Email</td>
+            <td>@item.Telefono</td>
+            <td>@item.Direccion</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
