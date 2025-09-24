@@ -1,0 +1,18 @@
+@model inmobilariaCeli.Models.Contrato
+
+<h2>Eliminar Contrato</h2>
+
+<p>¿Estás seguro que querés eliminar el contrato entre <strong>@Model.InquilinoNombre</strong> y la propiedad <strong>@Model.PropiedadDireccion</strong>?</p>
+
+<table class="table">
+    <tr><th>Fecha Inicio</th><td>@Model.FechaInicio.ToString("dd/MM/yyyy")</td></tr>
+    <tr><th>Fecha Fin</th><td>@Model.FechaFin.ToString("dd/MM/yyyy")</td></tr>
+    <tr><th>Monto Mensual</th><td>@Model.MontoMensual.ToString("C")</td></tr>
+    <tr><th>Depósito</th><td>@Model.Deposito.ToString("C")</td></tr>
+</table>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="/Contratos" class="btn btn-secondary">Cancelar</a>
+</form>

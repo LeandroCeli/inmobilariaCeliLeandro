@@ -1,0 +1,16 @@
+@model inmobilariaCeli.Models.Inquilino
+
+<h2>Detalles del Inquilino</h2>
+
+<table class="table">
+    <tr><th>DNI</th><td>@Model.DNI</td></tr>
+    <tr><th>Apellido</th><td>@Model.Apellido</td></tr>
+    <tr><th>Nombre</th><td>@Model.Nombre</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr><th>Teléfono</th><td>@Model.Telefono</td></tr>
+    <tr><th>Dirección</th><td>@Model.Direccion</td></tr>
+    <tr><th>Fecha de Alta</th><td>@Model.FechaAlta.ToString("dd/MM/yyyy")</td></tr>
+</table>
+
+<a class="btn btn-warning" href="/Inquilinos/Edit/@Model.Id">Editar</a>
+<a class="btn btn-secondary" href="/Inquilinos">Volver</a>

@@ -1,0 +1,31 @@
+@model inmobilariaCeli.Models.Inmueble
+
+<h2>Agregar Inmueble</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Dirección</label>
+        <input asp-for="Direccion" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Tipo</label>
+        <input asp-for="Tipo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Uso</label>
+        <input asp-for="Uso" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Ambientes</label>
+        <input asp-for="Ambientes" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Precio</label>
+        <input asp-for="Precio" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Propietario</label>
+        <select asp-for="IdPropietario" asp-items="ViewBag.Propietarios" class="form-control"></select>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+</form>

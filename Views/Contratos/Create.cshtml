@@ -1,0 +1,37 @@
+@model List<inmobilariaCeli.Models.Contrato>
+
+<h2>Contratos Activos</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Propiedad</th>
+            <th>Inquilino</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.PropiedadDireccion</td>
+                <td>@c.InquilinoNombre</td>
+                <td>@c.FechaInicio.ToShortDateString()</td>
+                <td>@c.FechaFin.ToShortDateString()</td>
+                
+                <td>@c.MontoMensual.ToString("C")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-info btn-sm">Ver</a>
+                    <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Nuevo Contrato</a>

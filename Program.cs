@@ -3,31 +3,35 @@ using inmobilariaCeli.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Activar MVC con controladores y vistas
+// 👉 Servicios MVC
 builder.Services.AddControllersWithViews();
 
-// 2) Leer cadena de conexión desde appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("MariaDB")!;
+// ✅ Registro de DbConnectionFactory con cadena de conexión
+builder.Services.AddScoped<DbConnectionFactory>(provider =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    return new DbConnectionFactory(connectionString);
+});
 
-// 3) Registrar fábrica de conexión
-builder.Services.AddSingleton(new DbConnectionFactory(connectionString));
-
-// 4) Registrar repositorios
+// ✅ Repositorios
 builder.Services.AddScoped<PropietarioRepository>();
 builder.Services.AddScoped<InquilinoRepository>();
+builder.Services.AddScoped<ContratoRepository>(); 
+builder.Services.AddScoped<InmuebleRepository>(); 
+
 
 var app = builder.Build();
 
-// 5) Configuración de middleware
+// 👉 Pipeline
 if (!app.Environment.IsDevelopment())
 {
-//    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // opcional
 app.UseStaticFiles();
-//app.UseRouting();
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(

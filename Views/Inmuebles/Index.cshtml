@@ -1,0 +1,37 @@
+@model IEnumerable<inmobilariaCeli.Models.Inmueble>
+
+<h2>Listado de Inmuebles</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Dirección</th>
+            <th>Tipo</th>
+            <th>Uso</th>
+            <th>Ambientes</th>
+            <th>Precio</th>
+            <th>Propietario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inmueble in Model)
+        {
+            <tr>
+                <td>@inmueble.Direccion</td>
+                <td>@inmueble.Tipo</td>
+                <td>@inmueble.Uso</td>
+                <td>@inmueble.Ambientes</td>
+                <td>@inmueble.Precio.ToString("C")</td>
+                <td>@inmueble.PropietarioNombre</td>
+                <td>
+                    <a href="/Inmuebles/Details/@inmueble.Id">Detalles</a> |
+                    <a href="/Inmuebles/Edit/@inmueble.Id">Editar</a> |
+                    <a href="/Inmuebles/Delete/@inmueble.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="/Inmuebles/Create">Agregar nuevo inmueble</a>

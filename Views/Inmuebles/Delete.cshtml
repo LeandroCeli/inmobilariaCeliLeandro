@@ -1,0 +1,20 @@
+@model inmobilariaCeli.Models.Inmueble
+
+<h2>Eliminar Inmueble</h2>
+
+<h4>¿Estás seguro que querés eliminar este inmueble?</h4>
+
+<div>
+    <strong>Dirección:</strong> @Model.Direccion<br />
+    <strong>Tipo:</strong> @Model.Tipo<br />
+    <strong>Uso:</strong> @Model.Uso<br />
+    <strong>Ambientes:</strong> @Model.Ambientes<br />
+    <strong>Precio:</strong> @Model.Precio.ToString("C")<br />
+    <strong>Propietario:</strong> @Model.PropietarioNombre
+</div>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

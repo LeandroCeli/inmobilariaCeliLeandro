@@ -1,0 +1,28 @@
+@model inmobilariaCeli.Models.Inmueble
+
+<h2>Detalles del Inmueble</h2>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Dirección</dt>
+        <dd class="col-sm-9">@Model.Direccion</dd>
+
+        <dt class="col-sm-3">Tipo</dt>
+        <dd class="col-sm-9">@Model.Tipo</dd>
+
+        <dt class="col-sm-3">Uso</dt>
+        <dd class="col-sm-9">@Model.Uso</dd>
+
+        <dt class="col-sm-3">Ambientes</dt>
+        <dd class="col-sm-9">@Model.Ambientes</dd>
+
+        <dt class="col-sm-3">Precio</dt>
+        <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+
+        <dt class="col-sm-3">Propietario</dt>
+        <dd class="col-sm-9">@Model.PropietarioNombre</dd>
+    </dl>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

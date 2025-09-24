@@ -1,9 +1,9 @@
 -- Crear la base de datos
-CREATE DATABASE IF NOT EXISTS InmobiliariaDB
+CREATE DATABASE IF NOT EXISTS InmobiliariaDBCeli
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_general_ci;
 
-USE InmobiliariaDB;
+USE InmobiliariaDBCeli;
 
 -- ======================================
 -- Tabla: Propietarios
@@ -51,7 +51,7 @@ VALUES
 
 /* contratos y propietarios*/
 
-USE InmobiliariaDB;
+USE InmobiliariaDBCeli;
 
 -- ======================================
 -- Tabla: Propiedades
