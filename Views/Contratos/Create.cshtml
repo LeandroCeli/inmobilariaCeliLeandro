@@ -1,37 +1,57 @@
-@model List<inmobilariaCeli.Models.Contrato>
+@model inmobilariaCeli.Models.Contrato
 
-<h2>Contratos Activos</h2>
+<h2>Nuevo Contrato</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Propiedad</th>
-            <th>Inquilino</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th>Tipo</th>
-            <th>Monto</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model)
-        {
-            <tr>
-                <td>@c.PropiedadDireccion</td>
-                <td>@c.InquilinoNombre</td>
-                <td>@c.FechaInicio.ToShortDateString()</td>
-                <td>@c.FechaFin.ToShortDateString()</td>
-                
-                <td>@c.MontoMensual.ToString("C")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-info btn-sm">Ver</a>
-                    <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-warning btn-sm">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-danger btn-sm">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="IdPropiedad">Propiedad</label>
+        <select asp-for="IdPropiedad" asp-items="ViewBag.Propiedades" class="form-control"></select>
+        <span asp-validation-for="IdPropiedad" class="text-danger"></span>
+    </div>
 
-<a asp-action="Create" class="btn btn-success">Nuevo Contrato</a>
+    <div class="form-group">
+        <label asp-for="IdInquilino">Inquilino</label>
+        <select asp-for="IdInquilino" asp-items="ViewBag.Inquilinos" class="form-control"></select>
+        <span asp-validation-for="IdInquilino" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaInicio"></label>
+        <input asp-for="FechaInicio" type="date" class="form-control" />
+        <span asp-validation-for="FechaInicio" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaFin"></label>
+        <input asp-for="FechaFin" type="date" class="form-control" />
+        <span asp-validation-for="FechaFin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TipoOcupacion"></label>
+        <select asp-for="TipoOcupacion" class="form-control">
+            <option value="Mensual">Mensual</option>
+            <option value="Temporaria">Temporaria</option>
+        </select>
+        <span asp-validation-for="TipoOcupacion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MontoMensual"></label>
+        <input asp-for="MontoMensual" class="form-control" />
+        <span asp-validation-for="MontoMensual" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Deposito"></label>
+        <input asp-for="Deposito" class="form-control" />
+        <span asp-validation-for="Deposito" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar contrato</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

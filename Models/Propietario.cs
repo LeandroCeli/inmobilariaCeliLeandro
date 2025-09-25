@@ -25,4 +25,7 @@ public class Propietario
     public string? Direccion { get; set; }
 
     public DateTime FechaAlta { get; set; } = DateTime.UtcNow;
+
+    // ✅ Propiedad auxiliar para mostrar en combos
+    public string NombreCompleto => $"{Nombre} {Apellido}";
 }

@@ -31,7 +31,7 @@ public class Contrato
     [Range(0, double.MaxValue, ErrorMessage = "El depósito debe ser positivo.")]
     public decimal Deposito { get; set; }
 
-    // Propiedades auxiliares para mostrar en vistas
-    public string PropiedadDireccion { get; set; } = string.Empty;
-    public string InquilinoNombre { get; set; } = string.Empty;
+    // ✅ Propiedades auxiliares para mostrar en vistas
+    public string PropiedadDireccion { get; set; } = "Sin dirección";
+    public string InquilinoNombre { get; set; } = "Sin nombre";
 }

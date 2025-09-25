@@ -9,6 +9,7 @@
             <th>Inquilino</th>
             <th>Fecha Inicio</th>
             <th>Fecha Fin</th>
+            <th>Tipo</th>
             <th>Monto Mensual</th>
             <th>Depósito</th>
             <th>Acciones</th>
@@ -18,20 +19,21 @@
         @foreach (var contrato in Model)
         {
             <tr>
-                <td>@contrato.PropiedadDireccion</td> <!-- propiedad auxiliar -->
-                <td>@contrato.InquilinoNombre</td>    <!-- propiedad auxiliar -->
+                <td>@contrato.PropiedadDireccion</td>
+                <td>@contrato.InquilinoNombre</td>
                 <td>@contrato.FechaInicio.ToString("dd/MM/yyyy")</td>
                 <td>@contrato.FechaFin.ToString("dd/MM/yyyy")</td>
+                <td>@contrato.TipoOcupacion</td>
                 <td>@contrato.MontoMensual.ToString("C")</td>
                 <td>@contrato.Deposito.ToString("C")</td>
                 <td>
-                    <a class="btn btn-info btn-sm" href="/Contratos/Details/@contrato.Id">Detalles</a>
-                    <a class="btn btn-warning btn-sm" href="/Contratos/Edit/@contrato.Id">Editar</a>
-                    <a class="btn btn-danger btn-sm" href="/Contratos/Delete/@contrato.Id">Eliminar</a>
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@contrato.Id">Detalles</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@contrato.Id">Editar</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@contrato.Id">Eliminar</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="/Contratos/Create">Agregar nuevo contrato</a>
+<a class="btn btn-primary" asp-action="Create">Agregar nuevo contrato</a>

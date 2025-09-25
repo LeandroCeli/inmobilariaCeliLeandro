@@ -9,7 +9,7 @@ public class ContratoRepository
     private readonly DbConnectionFactory _factory;
     public ContratoRepository(DbConnectionFactory factory) => _factory = factory;
 
-    // Listar todos los contratos
+    // Listar todos los contratos con datos auxiliares
     public async Task<List<Contrato>> GetAll()
     {
         var list = new List<Contrato>();
@@ -17,33 +17,52 @@ public class ContratoRepository
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT * FROM Contratos ORDER BY FechaInicio DESC";
+        cmd.CommandText = @"
+            SELECT c.Id, c.IdPropiedad, c.IdInquilino, c.FechaInicio, c.FechaFin,
+                   c.MontoMensual, c.Deposito,
+                   p.Direccion AS PropiedadDireccion,
+                   CONCAT(q.Nombre, ' ', q.Apellido) AS InquilinoNombre
+            FROM Contratos c
+            JOIN Propiedades p ON c.IdPropiedad = p.Id
+            JOIN Inquilinos q ON c.IdInquilino = q.Id
+            ORDER BY c.FechaInicio DESC";
 
         using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
         while (await rd.ReadAsync())
         {
             list.Add(new Contrato
             {
-                Id =rd.GetInt32(rd.GetOrdinal("Id")),
+                Id = rd.GetInt32(rd.GetOrdinal("Id")),
                 IdPropiedad = rd.GetInt32(rd.GetOrdinal("IdPropiedad")),
                 IdInquilino = rd.GetInt32(rd.GetOrdinal("IdInquilino")),
                 FechaInicio = rd.GetDateTime(rd.GetOrdinal("FechaInicio")),
                 FechaFin = rd.GetDateTime(rd.GetOrdinal("FechaFin")),
                 MontoMensual = rd.GetDecimal(rd.GetOrdinal("MontoMensual")),
-                Deposito = rd.GetDecimal(rd.GetOrdinal("Deposito"))
+                Deposito = rd.GetDecimal(rd.GetOrdinal("Deposito")),
+                PropiedadDireccion = rd.GetString(rd.GetOrdinal("PropiedadDireccion")),
+                InquilinoNombre = rd.GetString(rd.GetOrdinal("InquilinoNombre"))
             });
         }
         return list;
     }
 
-    // Buscar contrato por Id
+    // Buscar contrato por Id con datos auxiliares
     public async Task<Contrato?> GetById(int id)
     {
         using var conn = _factory.Create();
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT * FROM Contratos WHERE Id=@Id";
+        cmd.CommandText = @"
+            SELECT c.Id, c.IdPropiedad, c.IdInquilino, c.FechaInicio, c.FechaFin,
+                   c.MontoMensual, c.Deposito,
+                   p.Direccion AS PropiedadDireccion,
+                   CONCAT(q.Nombre, ' ', q.Apellido) AS InquilinoNombre
+            FROM Contratos c
+            JOIN Propiedades p ON c.IdPropiedad = p.Id
+            JOIN Inquilinos q ON c.IdInquilino = q.Id
+            WHERE c.Id = @Id";
+
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Id", id);
 
         using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
@@ -51,13 +70,15 @@ public class ContratoRepository
         {
             return new Contrato
             {
-                Id =  rd.GetInt32(rd.GetOrdinal("Id")),
-                IdPropiedad =rd.GetInt32(rd.GetOrdinal("IdPropiedad")),
+                Id = rd.GetInt32(rd.GetOrdinal("Id")),
+                IdPropiedad = rd.GetInt32(rd.GetOrdinal("IdPropiedad")),
                 IdInquilino = rd.GetInt32(rd.GetOrdinal("IdInquilino")),
                 FechaInicio = rd.GetDateTime(rd.GetOrdinal("FechaInicio")),
                 FechaFin = rd.GetDateTime(rd.GetOrdinal("FechaFin")),
                 MontoMensual = rd.GetDecimal(rd.GetOrdinal("MontoMensual")),
-                Deposito = rd.GetDecimal(rd.GetOrdinal("Deposito"))
+                Deposito = rd.GetDecimal(rd.GetOrdinal("Deposito")),
+                PropiedadDireccion = rd.GetString(rd.GetOrdinal("PropiedadDireccion")),
+                InquilinoNombre = rd.GetString(rd.GetOrdinal("InquilinoNombre"))
             };
         }
         return null;
@@ -70,7 +91,8 @@ public class ContratoRepository
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"INSERT INTO Contratos 
+        cmd.CommandText = @"
+            INSERT INTO Contratos 
             (IdPropiedad, IdInquilino, FechaInicio, FechaFin, MontoMensual, Deposito)
             VALUES (@IdPropiedad, @IdInquilino, @Inicio, @Fin, @Monto, @Deposito);
             SELECT LAST_INSERT_ID();";
@@ -94,7 +116,8 @@ public class ContratoRepository
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"UPDATE Contratos SET
+        cmd.CommandText = @"
+            UPDATE Contratos SET
             IdPropiedad=@IdPropiedad, IdInquilino=@IdInquilino,
             FechaInicio=@Inicio, FechaFin=@Fin,
             MontoMensual=@Monto, Deposito=@Deposito
