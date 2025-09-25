@@ -25,4 +25,7 @@ public class Inquilino
     public string? Direccion { get; set; }
 
     public DateTime FechaAlta { get; set; } = DateTime.UtcNow;
+    // Propiedad calculada
+    public string NombreCompleto => $"{Nombre} {Apellido}".Trim();
+
 }

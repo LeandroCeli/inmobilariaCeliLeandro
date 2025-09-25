@@ -1,16 +1,26 @@
-@model inmobilariaCeli.Models.Inquilino
+@model inmobilariaCeli.Models.Contrato
 
-<h2>Detalles del Inquilino</h2>
+<h2>Detalles del Contrato</h2>
 
-<table class="table">
-    <tr><th>DNI</th><td>@Model.DNI</td></tr>
-    <tr><th>Apellido</th><td>@Model.Apellido</td></tr>
-    <tr><th>Nombre</th><td>@Model.Nombre</td></tr>
-    <tr><th>Email</th><td>@Model.Email</td></tr>
-    <tr><th>Teléfono</th><td>@Model.Telefono</td></tr>
-    <tr><th>Dirección</th><td>@Model.Direccion</td></tr>
-    <tr><th>Fecha de Alta</th><td>@Model.FechaAlta.ToString("dd/MM/yyyy")</td></tr>
-</table>
+<dl class="row">
+    <dt class="col-sm-2">Propiedad</dt>
+    <dd class="col-sm-10">@Model.PropiedadDireccion</dd>
 
-<a class="btn btn-warning" href="/Inquilinos/Edit/@Model.Id">Editar</a>
-<a class="btn btn-secondary" href="/Inquilinos">Volver</a>
+    <dt class="col-sm-2">Inquilino</dt>
+    <dd class="col-sm-10">@Model.InquilinoNombre</dd>
+
+    <dt class="col-sm-2">Fecha Inicio</dt>
+    <dd class="col-sm-10">@Model.FechaInicio.ToShortDateString()</dd>
+
+    <dt class="col-sm-2">Fecha Fin</dt>
+    <dd class="col-sm-10">@Model.FechaFin.ToShortDateString()</dd>
+
+    <dt class="col-sm-2">Monto Mensual</dt>
+    <dd class="col-sm-10">$@Model.MontoMensual</dd>
+
+    <dt class="col-sm-2">Depósito</dt>
+    <dd class="col-sm-10">$@Model.Deposito</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

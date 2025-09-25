@@ -22,16 +22,17 @@ public class Contrato
 
     [Required(ErrorMessage = "El tipo de ocupación es obligatorio.")]
     [Display(Name = "Tipo de ocupación")]
-    public string TipoOcupacion { get; set; } = "Mensual"; // Alternativa: "Temporaria"
+    public TipoOcupacion TipoOcupacion { get; set; }
 
     [Required(ErrorMessage = "El monto mensual es obligatorio.")]
     [Range(0, double.MaxValue, ErrorMessage = "El monto debe ser positivo.")]
+    [Display(Name = "Monto mensual")]
     public decimal MontoMensual { get; set; }
 
     [Range(0, double.MaxValue, ErrorMessage = "El depósito debe ser positivo.")]
+    [Display(Name = "Depósito")]
     public decimal Deposito { get; set; }
 
-    // ✅ Propiedades auxiliares para mostrar en vistas
     public string PropiedadDireccion { get; set; } = "Sin dirección";
     public string InquilinoNombre { get; set; } = "Sin nombre";
 }

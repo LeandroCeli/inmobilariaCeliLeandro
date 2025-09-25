@@ -1,54 +1,58 @@
 @model inmobilariaCeli.Models.Contrato
+@using inmobilariaCeli.Models
 
 <h2>Nuevo Contrato</h2>
 
 <form asp-action="Create">
     <div class="form-group">
         <label asp-for="IdPropiedad">Propiedad</label>
-        <select asp-for="IdPropiedad" asp-items="ViewBag.Propiedades" class="form-control"></select>
+        <select asp-for="IdPropiedad" class="form-control" asp-items="ViewBag.Propiedades">
+            <option value="">-- Seleccione una propiedad --</option>
+        </select>
         <span asp-validation-for="IdPropiedad" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="IdInquilino">Inquilino</label>
-        <select asp-for="IdInquilino" asp-items="ViewBag.Inquilinos" class="form-control"></select>
+        <select asp-for="IdInquilino" class="form-control" asp-items="ViewBag.Inquilinos">
+            <option value="">-- Seleccione un inquilino --</option>
+        </select>
         <span asp-validation-for="IdInquilino" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="FechaInicio"></label>
-        <input asp-for="FechaInicio" type="date" class="form-control" />
+        <label asp-for="FechaInicio">Fecha de Inicio</label>
+        <input asp-for="FechaInicio" class="form-control" type="date" />
         <span asp-validation-for="FechaInicio" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="FechaFin"></label>
-        <input asp-for="FechaFin" type="date" class="form-control" />
+        <label asp-for="FechaFin">Fecha de Fin</label>
+        <input asp-for="FechaFin" class="form-control" type="date" />
         <span asp-validation-for="FechaFin" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="TipoOcupacion"></label>
-        <select asp-for="TipoOcupacion" class="form-control">
-            <option value="Mensual">Mensual</option>
-            <option value="Temporaria">Temporaria</option>
+        <label asp-for="TipoOcupacion">Tipo de Ocupación</label>
+        <select asp-for="TipoOcupacion" class="form-control" asp-items="Html.GetEnumSelectList<TipoOcupacion>()">
+            <option value="">-- Seleccione un tipo --</option>
         </select>
         <span asp-validation-for="TipoOcupacion" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="MontoMensual"></label>
-        <input asp-for="MontoMensual" class="form-control" />
+        <label asp-for="MontoMensual">Monto Mensual</label>
+        <input asp-for="MontoMensual" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="MontoMensual" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Deposito"></label>
-        <input asp-for="Deposito" class="form-control" />
+        <label asp-for="Deposito">Depósito</label>
+        <input asp-for="Deposito" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="Deposito" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Guardar contrato</button>
+    <button type="submit" class="btn btn-success">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
 

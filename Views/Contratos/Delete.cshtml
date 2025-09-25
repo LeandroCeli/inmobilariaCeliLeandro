@@ -2,17 +2,26 @@
 
 <h2>Eliminar Contrato</h2>
 
-<p>¿Estás seguro que querés eliminar el contrato entre <strong>@Model.InquilinoNombre</strong> y la propiedad <strong>@Model.PropiedadDireccion</strong>?</p>
+<div>
+    <p>¿Estás seguro que querés eliminar este contrato?</p>
 
-<table class="table">
-    <tr><th>Fecha Inicio</th><td>@Model.FechaInicio.ToString("dd/MM/yyyy")</td></tr>
-    <tr><th>Fecha Fin</th><td>@Model.FechaFin.ToString("dd/MM/yyyy")</td></tr>
-    <tr><th>Monto Mensual</th><td>@Model.MontoMensual.ToString("C")</td></tr>
-    <tr><th>Depósito</th><td>@Model.Deposito.ToString("C")</td></tr>
-</table>
+    <dl class="row">
+        <dt class="col-sm-2">Propiedad</dt>
+        <dd class="col-sm-10">@Model.PropiedadDireccion</dd>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a href="/Contratos" class="btn btn-secondary">Cancelar</a>
-</form>
+        <dt class="col-sm-2">Inquilino</dt>
+        <dd class="col-sm-10">@Model.InquilinoNombre</dd>
+
+        <dt class="col-sm-2">Inicio</dt>
+        <dd class="col-sm-10">@Model.FechaInicio.ToShortDateString()</dd>
+
+        <dt class="col-sm-2">Fin</dt>
+        <dd class="col-sm-10">@Model.FechaFin.ToShortDateString()</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

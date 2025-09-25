@@ -9,7 +9,7 @@ public class InquilinoRepository
     private readonly DbConnectionFactory _factory;
     public InquilinoRepository(DbConnectionFactory factory) => _factory = factory;
 
-    // Obtener todos
+    // Obtener todos los inquilinos
     public async Task<List<Inquilino>> GetAllAsync()
     {
         var list = new List<Inquilino>();
@@ -17,100 +17,99 @@ public class InquilinoRepository
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT * FROM Inquilinos ORDER BY Apellido, Nombre";
+        cmd.CommandText = @"SELECT Id, Nombre, Apellido, DNI, Telefono, Email FROM Inquilinos ORDER BY Nombre";
 
         using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
         while (await rd.ReadAsync())
         {
+            var nombre = rd.IsDBNull(rd.GetOrdinal("Nombre")) ? "" : rd.GetString(rd.GetOrdinal("Nombre"));
+            var apellido = rd.IsDBNull(rd.GetOrdinal("Apellido")) ? "" : rd.GetString(rd.GetOrdinal("Apellido"));
+
             list.Add(new Inquilino
             {
                 Id = rd.GetInt32(rd.GetOrdinal("Id")),
-                DNI = rd.GetString(rd.GetOrdinal("DNI")),
-                Apellido = rd.GetString(rd.GetOrdinal("Apellido")),
-                Nombre = rd.GetString(rd.GetOrdinal("Nombre")),
-                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? null : rd.GetString(rd.GetOrdinal("Email")),
-                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? null : rd.GetString(rd.GetOrdinal("Telefono")),
-                Direccion = rd.IsDBNull(rd.GetOrdinal("Direccion")) ? null : rd.GetString(rd.GetOrdinal("Direccion")),
-                FechaAlta = rd.GetDateTime(rd.GetOrdinal("FechaAlta"))
+                Nombre = nombre,
+                Apellido = apellido,
+                DNI = rd.IsDBNull(rd.GetOrdinal("DNI")) ? "" : rd.GetString(rd.GetOrdinal("DNI")),
+                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? "" : rd.GetString(rd.GetOrdinal("Telefono")),
+                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email"))
+              
             });
         }
         return list;
     }
 
-    // Obtener por Id
+    // Obtener un inquilino por Id
     public async Task<Inquilino?> GetByIdAsync(int id)
     {
         using var conn = _factory.Create();
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT * FROM Inquilinos WHERE Id=@Id";
+        cmd.CommandText = @"SELECT Id, Nombre, Apellido, DNI, Telefono, Email FROM Inquilinos WHERE Id = @Id";
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Id", id);
 
         using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
         if (await rd.ReadAsync())
         {
+            var nombre = rd.IsDBNull(rd.GetOrdinal("Nombre")) ? "" : rd.GetString(rd.GetOrdinal("Nombre"));
+            var apellido = rd.IsDBNull(rd.GetOrdinal("Apellido")) ? "" : rd.GetString(rd.GetOrdinal("Apellido"));
+
             return new Inquilino
             {
                 Id = rd.GetInt32(rd.GetOrdinal("Id")),
-                DNI = rd.GetString(rd.GetOrdinal("DNI")),
-                Apellido = rd.GetString(rd.GetOrdinal("Apellido")),
-                Nombre = rd.GetString(rd.GetOrdinal("Nombre")),
-                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? null : rd.GetString(rd.GetOrdinal("Email")),
-                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? null : rd.GetString(rd.GetOrdinal("Telefono")),
-                Direccion = rd.IsDBNull(rd.GetOrdinal("Direccion")) ? null : rd.GetString(rd.GetOrdinal("Direccion")),
-                FechaAlta = rd.GetDateTime(rd.GetOrdinal("FechaAlta"))
-            };
+                Nombre = nombre,
+                Apellido = apellido,
+                DNI = rd.IsDBNull(rd.GetOrdinal("DNI")) ? "" : rd.GetString(rd.GetOrdinal("DNI")),
+                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? "" : rd.GetString(rd.GetOrdinal("Telefono")),
+                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email"))
+                        };
         }
         return null;
     }
 
-    // Crear
+    // Crear nuevo inquilino
     public async Task CreateAsync(Inquilino i)
     {
         using var conn = _factory.Create();
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"INSERT INTO Inquilinos 
-            (DNI, Apellido, Nombre, Email, Telefono, Direccion, FechaAlta) 
-            VALUES (@DNI, @Apellido, @Nombre, @Email, @Telefono, @Direccion, @FechaAlta)";
+        cmd.CommandText = @"INSERT INTO Inquilinos (Nombre, Apellido, DNI, Telefono, Email)
+                            VALUES (@Nombre, @Apellido, @DNI, @Telefono, @Email)";
 
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@DNI", i.DNI);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Apellido", i.Apellido);
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Nombre", i.Nombre);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Email", (object?)i.Email ?? DBNull.Value);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Telefono", (object?)i.Telefono ?? DBNull.Value);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Direccion", (object?)i.Direccion ?? DBNull.Value);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@FechaAlta", i.FechaAlta);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Apellido", i.Apellido);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@DNI", i.DNI);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Telefono", i.Telefono);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Email", i.Email);
 
         await ((MySqlCommand)cmd).ExecuteNonQueryAsync();
     }
 
-    // Editar
+    // Actualizar inquilino existente
     public async Task UpdateAsync(Inquilino i)
     {
         using var conn = _factory.Create();
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"UPDATE Inquilinos SET 
-            DNI=@DNI, Apellido=@Apellido, Nombre=@Nombre, 
-            Email=@Email, Telefono=@Telefono, Direccion=@Direccion 
-            WHERE Id=@Id";
+        cmd.CommandText = @"UPDATE Inquilinos SET
+                            Nombre=@Nombre, Apellido=@Apellido, DNI=@DNI,
+                            Telefono=@Telefono, Email=@Email
+                            WHERE Id=@Id";
 
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Id", i.Id);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@DNI", i.DNI);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Apellido", i.Apellido);
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Nombre", i.Nombre);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Email", (object?)i.Email ?? DBNull.Value);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Telefono", (object?)i.Telefono ?? DBNull.Value);
-        ((MySqlCommand)cmd).Parameters.AddWithValue("@Direccion", (object?)i.Direccion ?? DBNull.Value);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Apellido", i.Apellido);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@DNI", i.DNI);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Telefono", i.Telefono);
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@Email", i.Email);
 
         await ((MySqlCommand)cmd).ExecuteNonQueryAsync();
     }
 
-    // Eliminar
+    // Eliminar inquilino
     public async Task DeleteAsync(int id)
     {
         using var conn = _factory.Create();

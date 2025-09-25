@@ -1,36 +1,63 @@
-@model inmobilariaCeli.Models.Inquilino
+@model inmobilariaCeli.Models.Contrato
+@using inmobilariaCeli.Models
 
-<h2>Editar Inquilino</h2>
+<h2>Editar Contrato</h2>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit">
     <input type="hidden" asp-for="Id" />
+
     <div class="form-group">
-        <label>DNI</label>
-        <input asp-for="DNI" class="form-control" />
-        <span asp-validation-for="DNI" class="text-danger"></span>
+        <label asp-for="IdPropiedad">Propiedad</label>
+        <select asp-for="IdPropiedad" class="form-control" asp-items="ViewBag.Propiedades">
+            <option value="">-- Seleccione una propiedad --</option>
+        </select>
+        <span asp-validation-for="IdPropiedad" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Apellido</label>
-        <input asp-for="Apellido" class="form-control" />
-        <span asp-validation-for="Apellido" class="text-danger"></span>
+        <label asp-for="IdInquilino">Inquilino</label>
+        <select asp-for="IdInquilino" class="form-control" asp-items="ViewBag.Inquilinos">
+            <option value="">-- Seleccione un inquilino --</option>
+        </select>
+        <span asp-validation-for="IdInquilino" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Nombre</label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
+        <label asp-for="FechaInicio">Fecha de Inicio</label>
+        <input asp-for="FechaInicio" class="form-control" type="date" />
+        <span asp-validation-for="FechaInicio" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label asp-for="FechaFin">Fecha de Fin</label>
+        <input asp-for="FechaFin" class="form-control" type="date" />
+        <span asp-validation-for="FechaFin" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Teléfono</label>
-        <input asp-for="Telefono" class="form-control" />
+        <label asp-for="TipoOcupacion">Tipo de Ocupación</label>
+        <select asp-for="TipoOcupacion" class="form-control" asp-items="Html.GetEnumSelectList<TipoOcupacion>()">
+            <option value="">-- Seleccione un tipo --</option>
+        </select>
+        <span asp-validation-for="TipoOcupacion" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Dirección</label>
-        <input asp-for="Direccion" class="form-control" />
+        <label asp-for="MontoMensual">Monto Mensual</label>
+        <input asp-for="MontoMensual" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="MontoMensual" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success">Guardar cambios</button>
+
+    <div class="form-group">
+        <label asp-for="Deposito">Depósito</label>
+        <input asp-for="Deposito" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Deposito" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
