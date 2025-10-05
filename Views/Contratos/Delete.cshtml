@@ -1,27 +1,26 @@
 @model inmobilariaCeli.Models.Contrato
+@{
+    ViewData["Title"] = "Eliminar contrato";
+}
 
-<h2>Eliminar Contrato</h2>
+<h2>Eliminar contrato</h2>
 
-<div>
-    <p>¿Estás seguro que querés eliminar este contrato?</p>
-
-    <dl class="row">
-        <dt class="col-sm-2">Propiedad</dt>
-        <dd class="col-sm-10">@Model.PropiedadDireccion</dd>
-
-        <dt class="col-sm-2">Inquilino</dt>
-        <dd class="col-sm-10">@Model.InquilinoNombre</dd>
-
-        <dt class="col-sm-2">Inicio</dt>
-        <dd class="col-sm-10">@Model.FechaInicio.ToShortDateString()</dd>
-
-        <dt class="col-sm-2">Fin</dt>
-        <dd class="col-sm-10">@Model.FechaFin.ToShortDateString()</dd>
-    </dl>
-
-    <form asp-action="DeleteConfirmed">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class="alert alert-warning">
+    <p>¿Estás seguro de que querés eliminar el siguiente contrato?</p>
 </div>
+
+<div class="mb-3">
+    <strong>Inquilino:</strong> @Model.InquilinoNombre<br />
+    <strong>Propiedad:</strong> @Model.PropiedadDireccion<br />
+    <strong>Inicio:</strong> @Model.FechaInicio.ToShortDateString()<br />
+    <strong>Fin:</strong> @Model.FechaFin.ToShortDateString()<br />
+    <strong>Monto mensual:</strong> $@Model.MontoMensual<br />
+    <strong>Depósito:</strong> $@Model.Deposito<br />
+    <strong>Tipo de ocupación:</strong> @Model.TipoOcupacion
+</div>
+
+<form asp-action="EliminarConfirmado" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

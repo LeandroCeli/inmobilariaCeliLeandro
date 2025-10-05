@@ -1,39 +1,43 @@
-@model IEnumerable<inmobilariaCeli.Models.Contrato>
+@model List<inmobilariaCeli.Models.Contrato>
+@{
+    ViewData["Title"] = "Contratos";
+}
 
-<h2>Listado de Contratos</h2>
+<h2>Listado de contratos</h2>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Nuevo contrato</a>
 
 <table class="table table-bordered table-striped">
-    <thead class="thead-dark">
+    <thead>
         <tr>
-            <th>Propiedad</th>
             <th>Inquilino</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Tipo</th>
-            <th>Monto Mensual</th>
+            <th>Propiedad</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Monto mensual</th>
             <th>Depósito</th>
+            <th>Ocupación</th>
+            <th>Vigente</th>
             <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var contrato in Model)
+        @foreach (var c in Model)
         {
             <tr>
-                <td>@contrato.PropiedadDireccion</td>
-                <td>@contrato.InquilinoNombre</td>
-                <td>@contrato.FechaInicio.ToString("dd/MM/yyyy")</td>
-                <td>@contrato.FechaFin.ToString("dd/MM/yyyy")</td>
-                <td>@contrato.TipoOcupacion</td>
-                <td>@contrato.MontoMensual.ToString("C")</td>
-                <td>@contrato.Deposito.ToString("C")</td>
+                <td>@c.InquilinoNombre</td>
+                <td>@c.PropiedadDireccion</td>
+                <td>@c.FechaInicio.ToShortDateString()</td>
+                <td>@c.FechaFin.ToShortDateString()</td>
+                <td>$@c.MontoMensual</td>
+                <td>$@c.Deposito</td>
+                <td>@c.TipoOcupacion</td>
+                <td>@(c.Vigente ? "Sí" : "No")</td>
                 <td>
-                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@contrato.Id">Detalles</a>
-                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@contrato.Id">Editar</a>
-                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@contrato.Id">Eliminar</a>
+                    <a asp-action="Editar" asp-route-id="@c.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Eliminar" asp-route-id="@c.Id" class="btn btn-sm btn-danger">Eliminar</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a class="btn btn-primary" asp-action="Create">Agregar nuevo contrato</a>

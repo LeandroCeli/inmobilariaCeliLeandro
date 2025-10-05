@@ -1,19 +1,24 @@
 @model inmobilariaCeli.Models.Inmueble
+@{
+    ViewData["Title"] = "Eliminar inmueble";
+}
 
-<h2>Eliminar Inmueble</h2>
+<h2>Eliminar inmueble</h2>
 
-<h4>¿Estás seguro que querés eliminar este inmueble?</h4>
+<div class="alert alert-warning">
+    <p>¿Estás seguro de que querés eliminar el siguiente inmueble?</p>
+</div>
 
-<div>
+<div class="mb-3">
     <strong>Dirección:</strong> @Model.Direccion<br />
     <strong>Tipo:</strong> @Model.Tipo<br />
     <strong>Uso:</strong> @Model.Uso<br />
     <strong>Ambientes:</strong> @Model.Ambientes<br />
-    <strong>Precio:</strong> @Model.Precio.ToString("C")<br />
+    <strong>Precio:</strong> $@Model.Precio<br />
     <strong>Propietario:</strong> @Model.PropietarioNombre
 </div>
 
-<form asp-action="DeleteConfirmed">
+<form asp-action="EliminarConfirmado" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>

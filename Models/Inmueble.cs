@@ -4,6 +4,7 @@ namespace inmobilariaCeli.Models;
 
 public class Inmueble
 {
+
     public int Id { get; set; }
 
     [Required, StringLength(150)]
@@ -12,8 +13,8 @@ public class Inmueble
     [Required, StringLength(50)]
     public string Tipo { get; set; } = string.Empty;
 
-    [Required, StringLength(50)]
-    public string Uso { get; set; } = string.Empty;
+    [Required]
+    public String  Uso { get; set; }
 
     [Range(1, 20)]
     public int Ambientes { get; set; }
@@ -24,6 +25,5 @@ public class Inmueble
     [Required]
     public int IdPropietario { get; set; }
 
-    // Propiedad auxiliar para mostrar nombre del propietario
     public string PropietarioNombre { get; set; } = string.Empty;
 }

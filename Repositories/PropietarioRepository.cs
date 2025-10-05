@@ -37,6 +37,46 @@ public class PropietarioRepository
         }
         return list;
     }
+    public async Task<List<Propietario>> GetAllConEstadoEliminacionAsync()
+    {
+        var list = new List<Propietario>();
+        using var conn = _factory.Create();
+        await ((MySqlConnection)conn).OpenAsync();
+
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+        SELECT p.*, 
+        (SELECT COUNT(*) FROM Contratos c 
+         INNER JOIN Propiedades pr ON c.IdPropiedad = pr.Id 
+         WHERE pr.IdPropietario = p.Id) AS ContratosActivos
+        FROM Propietarios p
+        ORDER BY p.Apellido, p.Nombre";
+
+        using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
+        while (await rd.ReadAsync())
+        {
+            var contratos = rd.GetInt32(rd.GetOrdinal("ContratosActivos"));
+
+            list.Add(new Propietario
+            {
+                Id = rd.GetInt32(rd.GetOrdinal("Id")),
+                DNI = rd.GetString(rd.GetOrdinal("DNI")),
+                Apellido = rd.GetString(rd.GetOrdinal("Apellido")),
+                Nombre = rd.GetString(rd.GetOrdinal("Nombre")),
+                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? null : rd.GetString(rd.GetOrdinal("Email")),
+                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? null : rd.GetString(rd.GetOrdinal("Telefono")),
+                Direccion = rd.IsDBNull(rd.GetOrdinal("Direccion")) ? null : rd.GetString(rd.GetOrdinal("Direccion")),
+                FechaAlta = rd.GetDateTime(rd.GetOrdinal("FechaAlta")),
+                PuedeEliminar = contratos == 0
+            });
+        }
+        return list;
+    }
+
+
+
+
+
 
     // Buscar por Id
     public async Task<Propietario?> GetById(int id)

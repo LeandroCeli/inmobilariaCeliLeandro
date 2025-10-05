@@ -1,16 +1,22 @@
 @model inmobilariaCeli.Models.Inquilino
+@{
+    ViewData["Title"] = "Eliminar inquilino";
+}
 
-<h2>Eliminar Inquilino</h2>
-<h4>¿Estás seguro de eliminar este registro?</h4>
+<h2>Eliminar inquilino</h2>
 
-<dl class="row">
-    <dt class="col-sm-2">DNI</dt>
-    <dd class="col-sm-10">@Model.DNI</dd>
-    <dt class="col-sm-2">Nombre</dt>
-    <dd class="col-sm-10">@Model.Apellido @Model.Nombre</dd>
-</dl>
+<div class="alert alert-warning">
+    <p>¿Estás seguro de que querés eliminar al siguiente inquilino?</p>
+</div>
 
-<form asp-action="DeleteConfirmed">
+<div class="mb-3">
+    <strong>Nombre:</strong> @Model.NombreCompleto<br />
+    <strong>DNI:</strong> @Model.DNI<br />
+    <strong>Email:</strong> @Model.Email<br />
+    <strong>Teléfono:</strong> @Model.Telefono<br />
+</div>
+
+<form asp-action="EliminarConfirmado" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>

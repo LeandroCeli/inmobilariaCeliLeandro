@@ -28,4 +28,8 @@ public class Propietario
 
     // ✅ Propiedad auxiliar para mostrar en combos
     public string NombreCompleto => $"{Nombre} {Apellido}";
+    public bool PuedeEliminar { get; set; }
+
+
+
 }

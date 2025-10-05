@@ -1,143 +1,94 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using inmobilariaCeli.Models;
 using inmobilariaCeli.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace inmobilariaCeli.Controllers
 {
+    [Authorize]
     public class ContratosController : Controller
     {
         private readonly ContratoRepository _repo;
-        private readonly InmuebleRepository _repoPropiedad;
-        private readonly InquilinoRepository _repoInquilino;
+        private readonly InmuebleRepository _inmuebleRepo;
+        private readonly InquilinoRepository _inquilinoRepo;
 
-        public ContratosController(ContratoRepository repo, InmuebleRepository repoPropiedad, InquilinoRepository repoInquilino)
+        public ContratosController(ContratoRepository repo, InmuebleRepository inmuebleRepo, InquilinoRepository inquilinoRepo)
         {
             _repo = repo;
-            _repoPropiedad = repoPropiedad;
-            _repoInquilino = repoInquilino;
+            _inmuebleRepo = inmuebleRepo;
+            _inquilinoRepo = inquilinoRepo;
         }
 
-        // GET: Contratos
+        // 📋 Listar todos
         public async Task<IActionResult> Index()
         {
-            var contratos = await _repo.GetAll();
-            return View(contratos);
+            var lista = await _repo.GetAllAsync();
+            return View(lista);
         }
 
-        // GET: Contratos/Details/5
-        public async Task<IActionResult> Details(int id)
+        // ➕ Crear
+        [HttpGet]
+        public async Task<IActionResult> Crear()
         {
-            var contrato = await _repo.GetById(id);
-            if (contrato == null)
-            {
-                return NotFound();
-            }
-            return View(contrato);
+            ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
+            ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+            return View();
         }
 
-        // GET: Contratos/Create
-      public async Task<IActionResult> Create()
-{
-    var propiedades = await _repoPropiedad.GetAllAsync() ?? new List<Inmueble>();
-    var inquilinos = await _repoInquilino.GetAllAsync() ?? new List<Inquilino>();
-
-    ViewBag.Propiedades = new SelectList(propiedades, "Id", "Direccion");
-    ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto");
-
-    return View(new Contrato());
-}
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(Contrato contrato)
-{
-    if (contrato.FechaFin <= contrato.FechaInicio)
-    {
-        ModelState.AddModelError("FechaFin", "La fecha de fin debe ser posterior a la de inicio.");
-    }
-
-    if (ModelState.IsValid)
-    {
-        await _repo.AltaContrato(contrato);
-        return RedirectToAction(nameof(Index));
-    }
-
-    var propiedades = await _repoPropiedad.GetAllAsync() ?? new List<Inmueble>();
-    var inquilinos = await _repoInquilino.GetAllAsync() ?? new List<Inquilino>();
-
-    ViewBag.Propiedades = new SelectList(propiedades, "Id", "Direccion", contrato.IdPropiedad);
-    ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto", contrato.IdInquilino);
-
-    return View(contrato);
-}
-
-        // GET: Contratos/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var contrato = await _repo.GetById(id);
-            if (contrato == null)
-            {
-                return NotFound();
-            }
-
-            var propiedades = await _repoPropiedad.GetAllAsync() ?? new List<Inmueble>();
-            var inquilinos = await _repoInquilino.GetAllAsync() ?? new List<Inquilino>();
-
-            ViewBag.Propiedades = new SelectList(propiedades, "Id", "Direccion", contrato.IdPropiedad);
-            ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto", contrato.IdInquilino);
-
-            return View(contrato);
-        }
-
-        // POST: Contratos/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Contrato contrato)
+        public async Task<IActionResult> Crear(Contrato c)
         {
-            if (id != contrato.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
+                ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+                return View(c);
             }
 
-            if (contrato.FechaFin <= contrato.FechaInicio)
-            {
-                ModelState.AddModelError("FechaFin", "La fecha de fin debe ser posterior a la de inicio.");
-            }
+            await _repo.CreateAsync(c);
+            return RedirectToAction("Index");
+        }
 
-            if (ModelState.IsValid)
-            {
-                await _repo.ActualizarContrato(contrato);
-                return RedirectToAction(nameof(Index));
-            }
+        // ✏️ Editar
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            var contrato = await _repo.GetByIdAsync(id);
+            if (contrato is null) return NotFound();
 
-            var propiedades = await _repoPropiedad.GetAllAsync() ?? new List<Inmueble>();
-            var inquilinos = await _repoInquilino.GetAllAsync() ?? new List<Inquilino>();
-
-            ViewBag.Propiedades = new SelectList(propiedades, "Id", "Direccion", contrato.IdPropiedad);
-            ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto", contrato.IdInquilino);
-
+            ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
+            ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
             return View(contrato);
         }
 
-        // GET: Contratos/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        [HttpPost]
+        public async Task<IActionResult> Editar(Contrato c)
         {
-            var contrato = await _repo.GetById(id);
-            if (contrato == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
+                ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+                return View(c);
             }
+
+            await _repo.UpdateAsync(c);
+            return RedirectToAction("Index");
+        }
+
+        // ❌ Eliminar
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var contrato = await _repo.GetByIdAsync(id);
+            if (contrato is null) return NotFound();
             return View(contrato);
         }
 
-        // POST: Contratos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> EliminarConfirmado(int id)
         {
-            await _repo.DeleteContrato(id);
-            return RedirectToAction(nameof(Index));
+            await _repo.DeleteAsync(id);
+            return RedirectToAction("Index");
         }
     }
 }

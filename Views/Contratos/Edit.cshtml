@@ -1,63 +1,73 @@
 @model inmobilariaCeli.Models.Contrato
-@using inmobilariaCeli.Models
+@{
+    ViewData["Title"] = "Editar contrato";
+    var inmuebles = ViewBag.Inmuebles as List<inmobilariaCeli.Models.Inmueble>;
+    var inquilinos = ViewBag.Inquilinos as List<inmobilariaCeli.Models.Inquilino>;
+}
 
-<h2>Editar Contrato</h2>
+<h2>Editar contrato</h2>
 
-<form asp-action="Edit">
+<form asp-action="Editar" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
         <label asp-for="IdPropiedad">Propiedad</label>
-        <select asp-for="IdPropiedad" class="form-control" asp-items="ViewBag.Propiedades">
-            <option value="">-- Seleccione una propiedad --</option>
+        <select asp-for="IdPropiedad" class="form-control" asp-items="@(new SelectList(inmuebles, "Id", "Direccion", Model.IdPropiedad))">
+            <option value="">-- Seleccione --</option>
         </select>
         <span asp-validation-for="IdPropiedad" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="IdInquilino">Inquilino</label>
-        <select asp-for="IdInquilino" class="form-control" asp-items="ViewBag.Inquilinos">
-            <option value="">-- Seleccione un inquilino --</option>
+        <select asp-for="IdInquilino" class="form-control" asp-items="@(new SelectList(inquilinos, "Id", "NombreCompleto", Model.IdInquilino))">
+            <option value="">-- Seleccione --</option>
         </select>
         <span asp-validation-for="IdInquilino" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="FechaInicio">Fecha de Inicio</label>
+        <label asp-for="FechaInicio"></label>
         <input asp-for="FechaInicio" class="form-control" type="date" />
         <span asp-validation-for="FechaInicio" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="FechaFin">Fecha de Fin</label>
+        <label asp-for="FechaFin"></label>
         <input asp-for="FechaFin" class="form-control" type="date" />
         <span asp-validation-for="FechaFin" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="TipoOcupacion">Tipo de Ocupación</label>
-        <select asp-for="TipoOcupacion" class="form-control" asp-items="Html.GetEnumSelectList<TipoOcupacion>()">
-            <option value="">-- Seleccione un tipo --</option>
+        <label asp-for="TipoOcupacion"></label>
+        <select asp-for="TipoOcupacion" class="form-control">
+            <option value="">-- Seleccione --</option>
+            @foreach (var tipo in Enum.GetValues(typeof(inmobilariaCeli.Models.TipoOcupacion)))
+            {
+                <option value="@((int)tipo)" selected="@(Model.TipoOcupacion == (TipoOcupacion)tipo)">
+                    @tipo
+                </option>
+            }
         </select>
         <span asp-validation-for="TipoOcupacion" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="MontoMensual">Monto Mensual</label>
+        <label asp-for="MontoMensual"></label>
         <input asp-for="MontoMensual" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="MontoMensual" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Deposito">Depósito</label>
+        <label asp-for="Deposito"></label>
         <input asp-for="Deposito" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="Deposito" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <button type="submit" class="btn btn-success mt-2">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Cancelar</a>
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

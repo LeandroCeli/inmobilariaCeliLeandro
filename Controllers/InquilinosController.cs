@@ -1,78 +1,74 @@
 using inmobilariaCeli.Models;
 using inmobilariaCeli.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace inmobilariaCeli.Controllers;
-
-public class InquilinosController : Controller
+namespace inmobilariaCeli.Controllers
 {
-    private readonly InquilinoRepository _repo;
-    public InquilinosController(InquilinoRepository repo) => _repo = repo;
-
-    // GET: /Inquilinos
-    public async Task<IActionResult> Index()
+    [Authorize]
+    public class InquilinosController : Controller
     {
-        var list = await _repo.GetAllAsync();
-        return View(list);
-    }
+        private readonly InquilinoRepository _repo;
 
-    // GET: /Inquilinos/Details/5
-    public async Task<IActionResult> Details(int id)
-    {
-        var i = await _repo.GetByIdAsync(id);
-        if (i == null) return NotFound();
-        return View(i);
-    }
-
-    // GET: /Inquilinos/Create
-    public IActionResult Create() => View();
-
-    // POST: /Inquilinos/Create
-    [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Inquilino i)
-    {
-        if (ModelState.IsValid)
+        public InquilinosController(InquilinoRepository repo)
         {
+            _repo = repo;
+        }
+
+        // 📋 Listar todos
+        public async Task<IActionResult> Index()
+        {
+            var lista = await _repo.GetAllConEstadoEliminacionAsync();
+            return View(lista);
+        }
+
+        // ➕ Crear
+        [HttpGet]
+        public IActionResult Crear() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Crear(Inquilino i)
+        {
+            if (!ModelState.IsValid)
+                return View(i);
+
             await _repo.CreateAsync(i);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
-        return View(i);
-    }
 
-    // GET: /Inquilinos/Edit/5
-    public async Task<IActionResult> Edit(int id)
-    {
-        var i = await _repo.GetByIdAsync(id);
-        if (i == null) return NotFound();
-        return View(i);
-    }
-
-    // POST: /Inquilinos/Edit/5
-    [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Inquilino i)
-    {
-        if (id != i.Id) return BadRequest();
-        if (ModelState.IsValid)
+        // ✏️ Editar
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
         {
-            await _repo.UpdateAsync(i);
-            return RedirectToAction(nameof(Index));
+            var inquilino = await _repo.GetByIdAsync(id);
+            if (inquilino is null) return NotFound();
+            return View(inquilino);
         }
-        return View(i);
-    }
 
-    // GET: /Inquilinos/Delete/5
-    public async Task<IActionResult> Delete(int id)
-    {
-        var i = await _repo.GetByIdAsync(id);
-        if (i == null) return NotFound();
-        return View(i);
-    }
+        [HttpPost]
+        public async Task<IActionResult> Editar(Inquilino i)
+        {
+            if (!ModelState.IsValid)
+                return View(i);
 
-    // POST: /Inquilinos/Delete/5
-    [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        await _repo.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+            await _repo.UpdateAsync(i);
+            return RedirectToAction("Index");
+        }
+
+        // ❌ Eliminar
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var inquilino = await _repo.GetByIdAsync(id);
+            if (inquilino is null) return NotFound();
+            return View(inquilino);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarConfirmado(int id)
+        {
+            await _repo.DeleteAsync(id);
+            return RedirectToAction("Index");
+        }
     }
 }

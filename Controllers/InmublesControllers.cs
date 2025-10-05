@@ -32,12 +32,20 @@ public class InmueblesController : Controller
     }
 
     // GET: /Inmuebles/Create
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create2()
     {
         var propietarios = await _propRepo.GetAll();
         ViewBag.Propietarios = new SelectList(propietarios, "Id", "NombreCompleto");
         return View();
     }
+
+    public async Task<IActionResult> Create()
+{
+    var propietarios = await _propRepo.GetAll();
+    ViewBag.Propietarios = propietarios; // ← sin SelectList
+    return View();
+}
+
 
     // POST: /Inmuebles/Create
     [HttpPost, ValidateAntiForgeryToken]

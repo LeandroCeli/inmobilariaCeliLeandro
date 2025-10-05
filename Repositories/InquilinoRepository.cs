@@ -33,11 +33,51 @@ public class InquilinoRepository
                 DNI = rd.IsDBNull(rd.GetOrdinal("DNI")) ? "" : rd.GetString(rd.GetOrdinal("DNI")),
                 Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? "" : rd.GetString(rd.GetOrdinal("Telefono")),
                 Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email"))
-              
+
             });
         }
         return list;
     }
+
+    public async Task<List<Inquilino>> GetAllConEstadoEliminacionAsync()
+    {
+        var list = new List<Inquilino>();
+        using var conn = _factory.Create();
+        await ((MySqlConnection)conn).OpenAsync();
+
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+        SELECT i.Id, i.Nombre, i.Apellido, i.DNI, i.Telefono, i.Email,
+        (SELECT COUNT(*) FROM Contratos c WHERE c.IdInquilino = i.Id) AS ContratosActivos
+        FROM Inquilinos i
+        ORDER BY i.Nombre";
+
+        using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
+        while (await rd.ReadAsync())
+        {
+            var nombre = rd.IsDBNull(rd.GetOrdinal("Nombre")) ? "" : rd.GetString(rd.GetOrdinal("Nombre"));
+            var apellido = rd.IsDBNull(rd.GetOrdinal("Apellido")) ? "" : rd.GetString(rd.GetOrdinal("Apellido"));
+            var contratos = rd.GetInt32(rd.GetOrdinal("ContratosActivos"));
+
+            list.Add(new Inquilino
+            {
+                Id = rd.GetInt32(rd.GetOrdinal("Id")),
+                Nombre = nombre,
+                Apellido = apellido,
+                DNI = rd.IsDBNull(rd.GetOrdinal("DNI")) ? "" : rd.GetString(rd.GetOrdinal("DNI")),
+                Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? "" : rd.GetString(rd.GetOrdinal("Telefono")),
+                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email")),
+                PuedeEliminar = contratos == 0
+            });
+        }
+        return list;
+    }
+
+
+
+
+
+
 
     // Obtener un inquilino por Id
     public async Task<Inquilino?> GetByIdAsync(int id)
@@ -46,7 +86,12 @@ public class InquilinoRepository
         await ((MySqlConnection)conn).OpenAsync();
 
         using var cmd = conn.CreateCommand();
-        cmd.CommandText = @"SELECT Id, Nombre, Apellido, DNI, Telefono, Email FROM Inquilinos WHERE Id = @Id";
+        cmd.CommandText = @"
+        SELECT i.Id, i.Nombre, i.Apellido, i.DNI, i.Telefono, i.Email,
+        (SELECT COUNT(*) FROM Contratos c WHERE c.InquilinoId = i.Id) AS ContratosActivos
+        FROM Inquilinos i
+        WHERE i.Id = @Id";
+
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Id", id);
 
         using var rd = await ((MySqlCommand)cmd).ExecuteReaderAsync();
@@ -54,6 +99,7 @@ public class InquilinoRepository
         {
             var nombre = rd.IsDBNull(rd.GetOrdinal("Nombre")) ? "" : rd.GetString(rd.GetOrdinal("Nombre"));
             var apellido = rd.IsDBNull(rd.GetOrdinal("Apellido")) ? "" : rd.GetString(rd.GetOrdinal("Apellido"));
+            var contratos = rd.GetInt32(rd.GetOrdinal("ContratosActivos"));
 
             return new Inquilino
             {
@@ -62,9 +108,11 @@ public class InquilinoRepository
                 Apellido = apellido,
                 DNI = rd.IsDBNull(rd.GetOrdinal("DNI")) ? "" : rd.GetString(rd.GetOrdinal("DNI")),
                 Telefono = rd.IsDBNull(rd.GetOrdinal("Telefono")) ? "" : rd.GetString(rd.GetOrdinal("Telefono")),
-                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email"))
-                        };
+                Email = rd.IsDBNull(rd.GetOrdinal("Email")) ? "" : rd.GetString(rd.GetOrdinal("Email")),
+                PuedeEliminar = contratos == 0
+            };
         }
+
         return null;
     }
 
@@ -121,4 +169,5 @@ public class InquilinoRepository
 
         await ((MySqlCommand)cmd).ExecuteNonQueryAsync();
     }
+
 }

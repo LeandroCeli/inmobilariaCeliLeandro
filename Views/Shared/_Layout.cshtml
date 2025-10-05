@@ -1,54 +1,89 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var user = HttpContextAccessor.HttpContext?.User;
+    var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
+    var isAdmin = user?.IsInRole("Administrador") ?? false;
+    var nombre = user?.FindFirst("NombreCompleto")?.Value ?? "Invitado";
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewBag.Title - Inmobiliaria MVC</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/css/site.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Inmobiliaria Celi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="@Url.Action("Index","Home")">🏠 Inmobiliaria Celi </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Menú">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Inmobiliaria Celi</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index","Propietarios")">Propietarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index","Inquilinos")">Inquilinos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index","Inmuebles")">Inmuebles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index","Contratos")">Contratos</a>
-                        </li>
+                        @if (isAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Usuarios" asp-action="Perfil">Mi perfil</a>
+                            </li>
+                            @if (isAdmin)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Propietarios" asp-action="Index">Propietarios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Inquilinos" asp-action="Index">Inquilinos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Inmuebles" asp-action="Index">Inmuebles</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Contratos" asp-action="Index">Contratos</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-warning" href="@Url.Action("About","Home")">Acerca de</a>
-                        </li>
+                        @if (isAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text text-light me-2">Hola, @nombre</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Usuarios" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Usuarios" asp-action="Login">Iniciar sesión</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container mt-4">
+    <main class="container mt-4">
         @RenderBody()
-    </div>
+    </main>
 
-    <footer class="bg-light text-center py-3 mt-4">
-        <p class="mb-0">© @DateTime.Now.Year - Inmobiliaria MVC </p>
+    <footer class="bg-dark text-light text-center py-3 mt-5">
+        <small>&copy; @DateTime.Now.Year - Inmobiliaria Celi</small>
     </footer>
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-     @RenderSection("Scripts", required: false)
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -85,7 +85,7 @@ CREATE TABLE Contratos (
 );
 
 -- ======================================
--- Datos iniciales (Propiedades de prueba)
+-- Datos iniciales (Inmuble de prueba)
 -- ======================================
 INSERT INTO Propiedades (Direccion, Tipo, Uso, Ambientes, Precio, IdPropietario)
 VALUES
@@ -99,3 +99,16 @@ INSERT INTO Contratos (IdPropiedad, IdInquilino, FechaInicio, FechaFin, MontoMen
 VALUES
 (1, 1, '2025-01-01', '2025-12-31', 55000.00, 110000.00),
 (2, 2, '2025-02-01', '2026-01-31', 75000.00, 150000.00);
+
+-- ======================================
+-- Tabla: Usuarios
+-- ======================================
+
+CREATE TABLE Usuarios (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    NombreCompleto VARCHAR(100),
+    Rol VARCHAR(20) NOT NULL, -- 'Administrador' o 'Empleado'
+    FotoPerfil VARCHAR(255) -- ruta o nombre de archivo
+);

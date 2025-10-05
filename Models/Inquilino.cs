@@ -28,4 +28,6 @@ public class Inquilino
     // Propiedad calculada
     public string NombreCompleto => $"{Nombre} {Apellido}".Trim();
 
+    public bool PuedeEliminar { get; set; }
+
 }

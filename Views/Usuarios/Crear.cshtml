@@ -1,0 +1,46 @@
+@model inmobilariaCeli.Models.Usuario
+@{
+    ViewData["Title"] = "Nuevo usuario";
+}
+
+<h2>Nuevo usuario</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<form action="/Usuarios/Crear" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="NombreCompleto">Nombre completo</label>
+        <input type="text" name="NombreCompleto" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Correo electrónico</label>
+        <input type="email" name="Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Contraseña</label>
+        <input type="password" name="Password" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Rol">Rol</label>
+        <select name="Rol" class="form-control">
+            <option value="Administrador">Administrador</option>
+            <option value="Empleado">Empleado</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="FotoPerfil">Foto de perfil</label>
+        <input type="file" name="FotoPerfil" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Crear usuario</button>
+    <a href="/Usuarios/Index" class="btn btn-secondary mt-2">Cancelar</a>
+</form>
