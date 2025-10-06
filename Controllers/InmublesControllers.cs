@@ -42,7 +42,7 @@ public class InmueblesController : Controller
     public async Task<IActionResult> Create()
 {
     var propietarios = await _propRepo.GetAll();
-    ViewBag.Propietarios = propietarios; // ← sin SelectList
+    ViewBag.Propietarios = propietarios; 
     return View();
 }
 

@@ -24,10 +24,10 @@ namespace inmobilariaCeli.Controllers
 
         // ➕ Crear
         [HttpGet]
-        public IActionResult Crear() => View();
+        public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Propietario p)
+        public async Task<IActionResult> Create(Propietario p)
         {
             if (!ModelState.IsValid)
                 return View(p);
@@ -57,7 +57,7 @@ namespace inmobilariaCeli.Controllers
 
         // ❌ Eliminar
         [HttpGet]
-        public async Task<IActionResult> Eliminar(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var propietario = await _repo.GetById(id);
             if (propietario is null) return NotFound();
@@ -65,7 +65,7 @@ namespace inmobilariaCeli.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EliminarConfirmado(int id)
+        public async Task<IActionResult> DeleteConfirmado(int id)
         {
             await _repo.DeletePropietario(id);
             return RedirectToAction("Index");

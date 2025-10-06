@@ -18,7 +18,7 @@
     <strong>Fecha de alta:</strong> @Model.FechaAlta.ToShortDateString()
 </div>
 
-<form asp-action="EliminarConfirmado" method="post">
+<form asp-action="DeleteConfirmado" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
