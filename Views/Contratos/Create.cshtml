@@ -7,7 +7,7 @@
 
 <h2>Nuevo contrato</h2>
 
-<form asp-action="Crear" method="post">
+<form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="IdPropiedad">Propiedad</label>
         <select asp-for="IdPropiedad" class="form-control" asp-items="@(new SelectList(inmuebles, "Id", "Direccion"))">

@@ -24,10 +24,10 @@ namespace inmobilariaCeli.Controllers
 
         // ➕ Crear
         [HttpGet]
-        public IActionResult Crear() => View();
+        public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Inquilino i)
+        public async Task<IActionResult> Create(Inquilino i)
         {
             if (!ModelState.IsValid)
                 return View(i);

@@ -28,7 +28,7 @@ namespace inmobilariaCeli.Controllers
 
         // ➕ Crear
         [HttpGet]
-        public async Task<IActionResult> Crear()
+        public async Task<IActionResult> Create()
         {
             ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
             ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
@@ -36,7 +36,7 @@ namespace inmobilariaCeli.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Contrato c)
+        public async Task<IActionResult> Create(Contrato c)
         {
             if (!ModelState.IsValid)
             {
