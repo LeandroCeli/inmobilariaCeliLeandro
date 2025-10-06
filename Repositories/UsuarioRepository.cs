@@ -153,7 +153,10 @@ namespace inmobilariaCeli.Repositories
                 Email = reader.GetString("Email"),
                 Password = reader.GetString("PasswordHash"),
                 NombreCompleto = reader.GetString("NombreCompleto"),
-                Rol = reader.GetString("Rol"),
+                Rol = Enum.TryParse<Usuario.RolUsuario>(reader.GetString(reader.GetOrdinal("Rol")), out var rolParseado)
+    ? rolParseado
+    : Usuario.RolUsuario.Empleado,
+
                 FotoPerfil = reader.IsDBNull(reader.GetOrdinal("FotoPerfil")) ? null : reader.GetString("FotoPerfil")
             };
         }

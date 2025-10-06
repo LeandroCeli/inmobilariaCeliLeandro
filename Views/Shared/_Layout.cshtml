@@ -3,7 +3,7 @@
 @{
     var user = HttpContextAccessor.HttpContext?.User;
     var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
-    var isAdmin = user?.IsInRole("Administrador") ?? false;
+   // var isAdmin = user?.IsInRole("Administrador,Empleado") ?? false;
     var nombre = user?.FindFirst("NombreCompleto")?.Value ?? "Invitado";
 }
 
@@ -31,8 +31,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Usuarios" asp-action="Perfil">Mi perfil</a>
                             </li>
-                            @if (isAdmin)
-                            {
+                           
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                                 </li>
@@ -48,7 +47,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Contratos" asp-action="Index">Contratos</a>
                                 </li>
-                            }
+                            
                         }
                     </ul>
                     <ul class="navbar-nav">

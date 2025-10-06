@@ -3,8 +3,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inmobilariaCeli.Models
 {
+
+    public enum RolUsuario
+    {
+        Administrador,
+        Empleado
+    }
+
+
+
     public class Usuario
     {
+        public enum RolUsuario
+        {
+            Administrador,
+            Empleado
+        }
+
         public int Id { get; set; }
 
         [NotMapped]
@@ -21,7 +36,7 @@ namespace inmobilariaCeli.Models
         public string NombreCompleto { get; set; }
 
         [Required(ErrorMessage = "El rol es obligatorio.")]
-        public string Rol { get; set; } = "Empleado";
+        public RolUsuario Rol { get; set; }
 
         public string? FotoPerfil { get; set; }
     }

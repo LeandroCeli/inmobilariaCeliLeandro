@@ -44,15 +44,19 @@
                 <td>@p.Direccion</td>
                 <td>@p.FechaAlta.ToShortDateString()</td>
                 <td>
-                    <a asp-action="Editar" asp-route-id="@p.Id" class="btn btn-sm btn-warning">Editar</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
 
-                    @if (p.PuedeEliminar)
-                    {
-                        <a asp-action="Eliminar" asp-route-id="@p.Id" class="btn btn-sm btn-danger">Eliminar</a>
-                    }
-                    else
-                    {
-                        <span class="text-muted">No se puede eliminar</span>
+                        <a asp-action="Editar" asp-route-id="@p.Id" class="btn btn-sm btn-warning">Editar</a>
+
+                        @if (p.PuedeEliminar)
+                        {
+                            <a asp-action="Eliminar" asp-route-id="@p.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No se puede eliminar</span>
+                        }
                     }
                 </td>
             </tr>

@@ -36,7 +36,7 @@ namespace inmobilariaCeli.Controllers
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
                 new Claim("NombreCompleto", usuario.NombreCompleto),
-                new Claim(ClaimTypes.Role, usuario.Rol)
+               new Claim(ClaimTypes.Role, usuario.Rol.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
