@@ -26,21 +26,29 @@ namespace inmobilariaCeli.Controllers
             return View(lista);
         }
 
-        // ➕ Crear
+        // ➕ Crear - GET
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
             ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
             return View();
         }
 
+        // ➕ Crear - POST
         [HttpPost]
         public async Task<IActionResult> Create(Contrato c)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
+                ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+                return View(c);
+            }
+
+            // ✅ Validación simple: no permitir contrato activo sobre mismo inmueble
+            bool haySuperposicion = await _repo.HaySuperposicionAsync(c.IdPropiedad, c.FechaInicio, c.FechaFin);
+            if (haySuperposicion)
+            {
+                ModelState.AddModelError("IdPropiedad", "El inmueble seleccionado ya tiene un contrato activo en las fechas indicadas.");
                 ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
                 return View(c);
             }
@@ -56,7 +64,6 @@ namespace inmobilariaCeli.Controllers
             var contrato = await _repo.GetByIdAsync(id);
             if (contrato is null) return NotFound();
 
-            ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
             ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
             return View(contrato);
         }
@@ -66,7 +73,6 @@ namespace inmobilariaCeli.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Inmuebles = await _inmuebleRepo.GetAllAsync();
                 ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
                 return View(c);
             }
@@ -90,5 +96,16 @@ namespace inmobilariaCeli.Controllers
             await _repo.DeleteAsync(id);
             return RedirectToAction("Index");
         }
+
+        // 🔹 NUEVO - Obtener inmuebles disponibles según tipo y uso
+        [HttpGet]
+        public async Task<JsonResult> GetInmueblesDisponibles(string tipoInmueble, string tipoUso)
+        {
+            var inmuebles = await _inmuebleRepo.GetDisponiblesAsync(tipoInmueble, tipoUso);
+            return Json(inmuebles);
+        }
     }
+
+
+    
 }
