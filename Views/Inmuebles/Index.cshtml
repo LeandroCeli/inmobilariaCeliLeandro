@@ -3,7 +3,7 @@
     ViewData["Title"] = "Inmuebles";
     var propietarios = ViewBag.Propietarios as List<inmobilariaCeli.Models.Propietario>;
     string filtro = ViewBag.Filtro ?? "Todas";
-    int? propietarioId = ViewBag.PropietarioId;
+    int? propietarioId = ViewBag.PropietarioId ?? 0;
 }
 
 <h2 class="mb-4">Listado de Inmuebles</h2>
@@ -23,9 +23,7 @@
                         foreach (var p in propietarios)
                         {
                             var selected = propietarioId == p.Id ? "selected" : "";
-                            <option value="@p.Id" selected="@selected">
-                                @p.Nombre @p.Apellido
-                            </option>
+                            <option value="@p.Id" selected="@selected">@p.Nombre @p.Apellido</option>
                         }
                     }
                 </select>
@@ -45,7 +43,6 @@
                 </select>
             </div>
 
-
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Filtrar</button>
             </div>
@@ -55,8 +52,6 @@
             </div>
         </form>
     </div>
-</div>
-
 </div>
 
 <table class="table table-bordered table-striped align-middle shadow-sm">
@@ -91,7 +86,17 @@
                     @if (User.IsInRole("Administrador"))
                     {
                         <a asp-action="Edit" asp-route-id="@i.Id" class="btn btn-sm btn-warning me-1">Editar</a>
-                        <a asp-action="Eliminar" asp-route-id="@i.Id" class="btn btn-sm btn-danger">Eliminar</a>
+
+                        @if (i.Disponible)
+                        {
+                            <a asp-action="Eliminar" asp-route-id="@i.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-secondary" disabled title="No se puede eliminar: inmueble ocupado">
+                                <i class="bi bi-lock-fill"></i> Eliminar
+                            </button>
+                        }
                     }
                 </td>
             </tr>
