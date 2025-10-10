@@ -93,7 +93,11 @@ namespace inmobilariaCeli.Controllers
         // 🔹 Marcar pago como abonado
         public async Task<IActionResult> Abonar(int id, int contratoId)
         {
-            await _repo.SetPagadoAsync(id);
+           
+
+              String usuario  = User.Identity?.Name ?? "Usuario desconocido";
+
+            await _repo.SetPagadoAsync(id,usuario);
             return RedirectToAction("Index", new { contratoId });
         }
 

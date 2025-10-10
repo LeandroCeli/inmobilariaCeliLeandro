@@ -93,18 +93,25 @@ namespace inmobilariaCeli.Repositories
         }
 
         // 🔹 Marcar un pago como abonado
-        public async Task SetPagadoAsync(int idPago)
+        public async Task SetPagadoAsync(int idPago, string usuario)
         {
             using var conn = _factory.Create();
             await ((MySqlConnection)conn).OpenAsync();
 
             using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"UPDATE pagos SET Pagado = 1, FechaPago = @Fecha WHERE Id = @Id";
+            cmd.CommandText = @"
+        UPDATE pagos 
+        SET Pagado = 1, FechaPago = @Fecha, UsuarioRegistro = @Usuario
+        WHERE Id = @Id
+    ";
+
             ((MySqlCommand)cmd).Parameters.AddWithValue("@Fecha", DateTime.Now);
             ((MySqlCommand)cmd).Parameters.AddWithValue("@Id", idPago);
+            ((MySqlCommand)cmd).Parameters.AddWithValue("@Usuario", usuario); // <-- agregar el parámetro
 
             await ((MySqlCommand)cmd).ExecuteNonQueryAsync();
         }
+
 
         // 🔹 Eliminar un pago
         public async Task DeleteAsync(int id)
