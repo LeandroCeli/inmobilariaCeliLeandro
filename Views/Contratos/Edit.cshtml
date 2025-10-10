@@ -1,18 +1,16 @@
 @model inmobilariaCeli.Models.Contrato
 @{
     ViewData["Title"] = "Editar contrato";
-    var inmuebles = ViewBag.Inmuebles as List<inmobilariaCeli.Models.Inmueble>;
-    var inquilinos = ViewBag.Inquilinos as List<inmobilariaCeli.Models.Inquilino>;
 }
 
 <h2>Editar contrato</h2>
 
-<form asp-action="Editar" method="post">
+<form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
         <label asp-for="IdPropiedad">Propiedad</label>
-        <select asp-for="IdPropiedad" class="form-control" asp-items="@(new SelectList(inmuebles, "Id", "Direccion", Model.IdPropiedad))">
+        <select asp-for="IdPropiedad" class="form-control" asp-items="ViewBag.Inmuebles">
             <option value="">-- Seleccione --</option>
         </select>
         <span asp-validation-for="IdPropiedad" class="text-danger"></span>
@@ -20,7 +18,7 @@
 
     <div class="form-group">
         <label asp-for="IdInquilino">Inquilino</label>
-        <select asp-for="IdInquilino" class="form-control" asp-items="@(new SelectList(inquilinos, "Id", "NombreCompleto", Model.IdInquilino))">
+        <select asp-for="IdInquilino" class="form-control" asp-items="ViewBag.Inquilinos">
             <option value="">-- Seleccione --</option>
         </select>
         <span asp-validation-for="IdInquilino" class="text-danger"></span>

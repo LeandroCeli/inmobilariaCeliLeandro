@@ -38,7 +38,7 @@ namespace inmobilariaCeli.Controllers
 
         // ✏️ Editar
         [HttpGet]
-        public async Task<IActionResult> Editar(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var propietario = await _repo.GetById(id);
             if (propietario is null) return NotFound();
@@ -46,7 +46,7 @@ namespace inmobilariaCeli.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar(Propietario p)
+        public async Task<IActionResult> Edit(Propietario p)
         {
             if (!ModelState.IsValid)
                 return View(p);

@@ -43,7 +43,7 @@
 
                     @if (User.IsInRole("Administrador"))
                     {
-                        <a asp-action="Editar" asp-route-id="@i.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Edit" asp-route-id="@i.Id" class="btn btn-sm btn-warning">Editar</a>
 
                         @if (i.PuedeEliminar)
                         {

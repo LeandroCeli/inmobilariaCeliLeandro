@@ -1,0 +1,54 @@
+@model Pago
+@{
+    ViewData["Title"] = "Registrar nuevo pago";
+    var numeroPago = ViewBag.NumeroPago;
+    var montoContrato = ViewBag.MontoContrato;
+}
+
+<h2>Registrar nuevo pago</h2>
+
+<div class="alert alert-info">
+    <strong>Cuota #@numeroPago</strong> — Monto establecido: <strong>@montoContrato.ToString("C")</strong><br />
+    Fecha sugerida: <strong>@DateTime.Now.ToShortDateString()</strong>
+</div>
+
+<form asp-action="Create">
+    <input type="hidden" asp-for="IdContrato" />
+
+    <div class="mb-3">
+        <label asp-for="NumeroPago" class="form-label"></label>
+        <input asp-for="NumeroPago" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FechaPago" class="form-label"></label>
+        <input asp-for="FechaPago" type="date" class="form-control" />
+        <span asp-validation-for="FechaPago" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Importe" class="form-label"></label>
+        <input asp-for="Importe" class="form-control" />
+        <span asp-validation-for="Importe" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Detalle" class="form-label"></label>
+        <textarea asp-for="Detalle" class="form-control"></textarea>
+        <span asp-validation-for="Detalle" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="Pagado" class="form-check-input" />
+        <label asp-for="Pagado" class="form-check-label">¿Está pagado?</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" asp-route-contratoId="@Model.IdContrato" class="btn btn-secondary">Volver</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

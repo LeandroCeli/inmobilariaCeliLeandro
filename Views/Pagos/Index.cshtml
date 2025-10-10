@@ -1,0 +1,55 @@
+@model List<Pago>
+@{
+    ViewData["Title"] = "Pagos del contrato";
+    var contratoId = ViewBag.ContratoId;
+}
+
+<h2>Pagos del contrato</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Importe</th>
+            <th>Detalle</th>
+            <th>Estado</th>
+            <th>Inquilino</th>
+            <th>Propiedad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.NumeroPago</td>
+                <td>@p.FechaPago.ToShortDateString()</td>
+                <td>@p.Importe.ToString("C")</td>
+                <td>@p.Detalle</td>
+                <td>
+                    @if (p.Pagado)
+                    {
+                        <span class="badge bg-success">Pagado</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Pendiente</span>
+                    }
+                </td>
+                <td>@p.InquilinoNombre</td>
+                <td>@p.PropiedadDireccion</td>
+                <td>
+                    @if (!p.Pagado)
+                    {
+                        <a asp-action="Abonar" asp-route-id="@p.Id" asp-route-contratoId="@p.IdContrato"
+                            class="btn btn-sm btn-primary">Abonar</a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" asp-route-contratoId="@ViewBag.ContratoId" class="btn btn-success">Registrar nuevo pago</a>

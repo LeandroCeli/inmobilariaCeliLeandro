@@ -1,12 +1,11 @@
 @model inmobilariaCeli.Models.Inmueble
 @{
     ViewData["Title"] = "Editar inmueble";
-    var propietarios = ViewBag.Propietarios as List<inmobilariaCeli.Models.Propietario>;
 }
 
 <h2>Editar inmueble</h2>
 
-<form asp-action="Editar" method="post">
+<form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
@@ -41,7 +40,7 @@
 
     <div class="form-group">
         <label asp-for="IdPropietario">Propietario</label>
-        <select asp-for="IdPropietario" class="form-control" asp-items="@(new SelectList(propietarios, "Id", "NombreCompleto"))">
+        <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.Propietarios">
             <option value="">-- Seleccione --</option>
         </select>
         <span asp-validation-for="IdPropietario" class="text-danger"></span>

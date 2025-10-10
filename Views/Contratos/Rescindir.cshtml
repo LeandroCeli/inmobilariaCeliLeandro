@@ -1,12 +1,12 @@
 @model inmobilariaCeli.Models.Contrato
 @{
-    ViewData["Title"] = "Eliminar contrato";
+    ViewData["Title"] = "Rescindir contrato";
 }
 
-<h2>Eliminar contrato</h2>
+<h2>Rescindir contrato</h2>
 
 <div class="alert alert-warning">
-    <p>¿Estás seguro de que querés eliminar el siguiente contrato?</p>
+    <p>¿Estás seguro de que querés <strong>rescindir</strong> el siguiente contrato? Esta acción marcará el contrato como dado de baja y liberará el inmueble.</p>
 </div>
 
 <div class="mb-3">
@@ -19,8 +19,8 @@
     <strong>Tipo de ocupación:</strong> @Model.TipoOcupacion
 </div>
 
-<form asp-action="EliminarConfirmado" method="post">
+<form asp-action="RescindirConfirmado" method="post">
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <button type="submit" class="btn btn-danger">Confirmar rescisión</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>

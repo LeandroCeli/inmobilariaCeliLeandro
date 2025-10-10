@@ -3,12 +3,31 @@
     ViewData["Title"] = "Contratos";
 }
 
-<h2>Listado de contratos</h2>
+<h2 class="mb-4 text-center">Listado de Contratos</h2>
 
-<a asp-action="Create" class="btn btn-primary mb-3">Nuevo contrato</a>
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Mensaje"]
+    </div>
+}
 
-<table class="table table-bordered table-striped">
-    <thead>
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nuevo contrato
+    </a>
+
+    <form asp-action="Index" method="get" class="d-flex" style="max-width: 350px;">
+        <input type="text" name="filtro" class="form-control me-2" placeholder="Buscar por inquilino..."
+               value="@Context.Request.Query["filtro"]" />
+        <button type="submit" class="btn btn-outline-secondary">
+            <i class="bi bi-search"></i> Buscar
+        </button>
+    </form>
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
         <tr>
             <th>Inquilino</th>
             <th>Propiedad</th>
@@ -16,29 +35,66 @@
             <th>Fin</th>
             <th>Monto mensual</th>
             <th>Depósito</th>
+            <th>Cuotas</th>
             <th>Ocupación</th>
             <th>Vigente</th>
-            <th>Acciones</th>
+            <th style="width:260px;">Acciones</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var c in Model)
+        @if (Model.Any())
+        {
+            @foreach (var c in Model)
+            {
+                bool rescindido = c.DadoDeBaja;
+                <tr class="@(rescindido ? "table-secondary text-muted" : "")" style="@(rescindido ? "opacity: 0.85;" : "")">
+                    <td>@(string.IsNullOrEmpty(c.InquilinoNombre) ? "Sin nombre" : c.InquilinoNombre)</td>
+                    <td>@(string.IsNullOrEmpty(c.PropiedadDireccion) ? "Sin dirección" : c.PropiedadDireccion)</td>
+                    <td>@c.FechaInicio.ToShortDateString()</td>
+                    <td>@c.FechaFin.ToShortDateString()</td>
+                    <td>$@c.MontoMensual</td>
+                    <td>$@c.Deposito</td>
+                    <td>@c.Cuotas</td>
+                    <td>@c.TipoOcupacion</td>
+                    <td>@(c.Vigente ? "Sí" : "No")</td>
+                    <td>
+                        @if (rescindido)
+                        {
+                            <div class="text-center">
+                                <span class="badge bg-danger">
+                                    Rescindido el @c.FechaBaja?.ToShortDateString()
+                                </span>
+                                <br />
+                                <small class="text-muted">por @c.UsuarioBaja</small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a class="btn btn-info btn-sm" href="@Url.Action("Index", "Pagos", new { contratoId = c.Id })">
+                                    <i class="bi bi-cash-stack"></i> Pagos
+                                </a>
+
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a asp-action="Rescindir" asp-route-id="@c.Id" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-x-circle"></i> Rescindir
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@c.InquilinoNombre</td>
-                <td>@c.PropiedadDireccion</td>
-                <td>@c.FechaInicio.ToShortDateString()</td>
-                <td>@c.FechaFin.ToShortDateString()</td>
-                <td>$@c.MontoMensual</td>
-                <td>$@c.Deposito</td>
-                <td>@c.TipoOcupacion</td>
-                <td>@(c.Vigente ? "Sí" : "No")</td>
-                <td>
-                    @if (User.IsInRole("Administrador"))
-                    {
-                        <a asp-action="Editar" asp-route-id="@c.Id" class="btn btn-sm btn-warning">Editar</a>
-                        <a asp-action="Eliminar" asp-route-id="@c.Id" class="btn btn-sm btn-danger">Eliminar</a>
-                    }
+                <td colspan="10" class="text-center text-muted">
+                    No se encontraron contratos con el filtro aplicado.
                 </td>
             </tr>
         }

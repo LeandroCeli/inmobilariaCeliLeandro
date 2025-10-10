@@ -1,0 +1,28 @@
+@model inmobilariaCeli.Models.Pago
+@{
+    ViewData["Title"] = "Eliminar Pago";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Eliminar este pago?</h2>
+
+    <div class="card mt-3 shadow-sm">
+        <div class="card-body">
+            <p><strong>N° Pago:</strong> @Model.NumeroPago</p>
+            <p><strong>Fecha:</strong> @Model.FechaPago.ToShortDateString()</p>
+            <p><strong>Detalle:</strong> @Model.Detalle</p>
+            <p><strong>Importe:</strong> $@Model.Importe</p>
+            <p><strong>Pagado:</strong> @(Model.Pagado ? "Sí" : "No")</p>
+        </div>
+    </div>
+
+    <form asp-action="Eliminar" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IdContrato" />
+
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Confirmar eliminación
+        </button>
+        <a href="@Url.Action("Index", "Pagos", new { idContrato = Model.IdContrato })" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

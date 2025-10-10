@@ -23,6 +23,9 @@ builder.Services.AddScoped<ContratoRepository>();
 builder.Services.AddScoped<InmuebleRepository>();
 builder.Services.AddScoped<UsuarioRepository>(); 
 builder.Services.AddTransient<PropiedadRepository>();
+builder.Services.AddScoped<PagoRepository>();
+
+
 
 
 // ✅ Autenticación con cookies

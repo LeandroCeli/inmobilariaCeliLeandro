@@ -1,7 +1,9 @@
 using inmobilariaCeli.Models;
 using inmobilariaCeli.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace inmobilariaCeli.Controllers
 {
@@ -53,32 +55,52 @@ namespace inmobilariaCeli.Controllers
                 return View(c);
             }
 
+            c.RegistradoPor = User.Identity?.Name ?? "Usuario desconocido";
+
+
+
+
+
             await _repo.CreateAsync(c);
             return RedirectToAction("Index");
         }
 
-        // ✏️ Editar
+        // ✏️ Editar (GET)
         [HttpGet]
-        public async Task<IActionResult> Editar(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var contrato = await _repo.GetByIdAsync(id);
             if (contrato is null) return NotFound();
 
-            ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+            var inquilinos = await _inquilinoRepo.GetAllAsync() ?? new List<Inquilino>();
+            var inmuebles = await _inmuebleRepo.GetAllAsync() ?? new List<Inmueble>();
+
+            ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto", contrato.IdInquilino);
+            ViewBag.Inmuebles = new SelectList(inmuebles, "Id", "Direccion", contrato.IdPropiedad);
+
             return View(contrato);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Editar(Contrato c)
+        // ✏️ Editar (POST)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Contrato c)
         {
+            if (id != c.Id) return BadRequest();
+
             if (!ModelState.IsValid)
             {
-                ViewBag.Inquilinos = await _inquilinoRepo.GetAllAsync();
+                // 🔑 Recargar listas si hay error de validación
+                var inquilinos = await _inquilinoRepo.GetAllAsync() ?? new List<Inquilino>();
+                var inmuebles = await _inmuebleRepo.GetAllAsync() ?? new List<Inmueble>();
+
+                ViewBag.Inquilinos = new SelectList(inquilinos, "Id", "NombreCompleto", c.IdInquilino);
+                ViewBag.Inmuebles = new SelectList(inmuebles, "Id", "Direccion", c.IdPropiedad);
+
                 return View(c);
             }
 
             await _repo.UpdateAsync(c);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // ❌ Eliminar
@@ -104,8 +126,48 @@ namespace inmobilariaCeli.Controllers
             var inmuebles = await _inmuebleRepo.GetDisponiblesAsync(tipoInmueble, tipoUso);
             return Json(inmuebles);
         }
+
+        // 🔹 Mostrar vista de confirmación
+        public async Task<IActionResult> Rescindir(int id)
+        {
+            var contrato = await _repo.GetByIdAsync(id);
+            if (contrato == null)
+            {
+                TempData["Error"] = "Contrato no encontrado.";
+                return RedirectToAction("Index");
+            }
+
+            return View("Rescindir", contrato); // Vista de confirmación
+        }
+
+        // 🔹 Confirmar rescisión
+        [HttpPost]
+        public async Task<IActionResult> RescindirConfirmado(int id)
+        {
+            var contrato = await _repo.GetByIdAsync(id);
+            if (contrato == null)
+            {
+                TempData["Error"] = "Contrato no encontrado.";
+                return RedirectToAction("Index");
+            }
+
+            contrato.DadoDeBaja = true;
+            contrato.FechaBaja = DateTime.Now;
+            contrato.UsuarioBaja = User.Identity?.Name ?? "Usuario desconocido";
+
+            await _repo.UpdateAsync(contrato);
+            await _inmuebleRepo.LiberarInmuebleAsync(contrato.IdPropiedad);
+
+            await _repo.RescindirContratoAsync(contrato.Id, contrato.UsuarioBaja);
+            await _inmuebleRepo.LiberarInmuebleAsync(contrato.IdPropiedad);
+
+            TempData["Success"] = "Contrato rescindido correctamente.";
+            return RedirectToAction("Index");
+        }
+
+
     }
 
 
-    
+
 }

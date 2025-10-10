@@ -88,6 +88,14 @@
         <span asp-validation-for="Deposito" class="text-danger"></span>
     </div>
 
+    <!-- 8️⃣ Periodos (opcional si lo calculás en backend) -->
+    @* Si querés mostrarlo, descomentá esto:
+    <div class="form-group mt-3">
+        <label asp-for="NumeroPeriodos">Cantidad de períodos</label>
+        <input asp-for="NumeroPeriodos" class="form-control" readonly />
+    </div>
+    *@
+
     <button type="submit" class="btn btn-success mt-3">Guardar</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Cancelar</a>
 </form>

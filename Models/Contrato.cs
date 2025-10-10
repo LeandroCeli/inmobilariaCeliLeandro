@@ -41,7 +41,27 @@ namespace inmobilariaCeli.Models
         public string PropiedadDireccion { get; set; } = "Sin dirección";
         public string InquilinoNombre { get; set; } = "Sin nombre";
 
-        // Propiedad calculada para saber si el contrato está vigente
-        public bool Vigente => FechaFin >= DateTime.Today;
+        public Inquilino? Inquilino { get; set; }
+        public Propiedad? Propiedad { get; set; }
+
+        public bool Vigente => DateTime.Now >= FechaInicio && DateTime.Now <= FechaFin;
+        public int Cuotas { get; set; } // cantidad total de pagos (por defecto mensual)
+
+        // No se guardan en DB
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public int PagosRealizados { get; set; }
+
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public int PagosPendientes => Cuotas - PagosRealizados;
+        public string? RegistradoPor { get; set; }
+
+        public bool DadoDeBaja { get; set; } = false;
+
+        [DataType(DataType.Date)]
+        public DateTime? FechaBaja { get; set; }
+
+        public string? UsuarioBaja { get; set; }
+
+
     }
 }

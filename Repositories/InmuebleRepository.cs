@@ -136,16 +136,12 @@ public class InmuebleRepository
         using var cmd = conn.CreateCommand();
         cmd.CommandText = @"
         SELECT i.*, CONCAT(p.Nombre, ' ', p.Apellido) AS PropietarioNombre
-        FROM Propiedades i
-        JOIN Propietarios p ON i.IdPropietario = p.Id
+        FROM propiedades i
+        JOIN propietarios p ON i.IdPropietario = p.Id
         WHERE i.Tipo = @Tipo
           AND i.Uso = @Uso
-          AND i.Id NOT IN (
-              SELECT c.IdPropiedad
-              FROM Contratos c
-              WHERE CURDATE() BETWEEN c.FechaInicio AND c.FechaFin
-          )
-        ORDER BY i.Direccion";
+          AND i.Disponible = 1
+        ORDER BY i.Direccion;";
 
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Tipo", tipo);
         ((MySqlCommand)cmd).Parameters.AddWithValue("@Uso", uso);
@@ -162,11 +158,24 @@ public class InmuebleRepository
                 Ambientes = rd.GetInt32(rd.GetOrdinal("Ambientes")),
                 Precio = rd.GetDecimal(rd.GetOrdinal("Precio")),
                 IdPropietario = rd.GetInt32(rd.GetOrdinal("IdPropietario")),
-                PropietarioNombre = rd.IsDBNull(rd.GetOrdinal("PropietarioNombre")) ? "" : rd.GetString(rd.GetOrdinal("PropietarioNombre"))
+                PropietarioNombre = rd.IsDBNull(rd.GetOrdinal("PropietarioNombre"))
+                    ? ""
+                    : rd.GetString(rd.GetOrdinal("PropietarioNombre"))
             });
         }
 
         return list;
+    }
+    public async Task LiberarInmuebleAsync(int idPropiedad)
+    {
+        using var conn = _factory.Create();
+        await ((MySqlConnection)conn).OpenAsync();
+
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "UPDATE propiedades SET Disponible = 1 WHERE Id = @id";
+        ((MySqlCommand)cmd).Parameters.AddWithValue("@id", idPropiedad);
+
+        await ((MySqlCommand)cmd).ExecuteNonQueryAsync();
     }
 
 }

@@ -88,7 +88,7 @@ public class InquilinoRepository
         using var cmd = conn.CreateCommand();
         cmd.CommandText = @"
         SELECT i.Id, i.Nombre, i.Apellido, i.DNI, i.Telefono, i.Email,
-        (SELECT COUNT(*) FROM Contratos c WHERE c.InquilinoId = i.Id) AS ContratosActivos
+        (SELECT COUNT(*) FROM Contratos c WHERE c.IdInquilino = i.Id) AS ContratosActivos
         FROM Inquilinos i
         WHERE i.Id = @Id";
 
