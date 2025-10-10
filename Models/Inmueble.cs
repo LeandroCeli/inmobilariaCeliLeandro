@@ -14,7 +14,7 @@ public class Inmueble
     public string Tipo { get; set; } = string.Empty;
 
     [Required]
-    public String  Uso { get; set; }
+    public String Uso { get; set; }
 
     [Range(1, 20)]
     public int Ambientes { get; set; }
@@ -26,4 +26,6 @@ public class Inmueble
     public int IdPropietario { get; set; }
 
     public string PropietarioNombre { get; set; } = string.Empty;
+    
+     public bool Disponible { get; set; }
 }

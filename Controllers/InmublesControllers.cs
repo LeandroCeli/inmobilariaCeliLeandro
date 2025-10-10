@@ -17,11 +17,37 @@ public class InmueblesController : Controller
     }
 
     // GET: /Inmuebles
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string filtro = "Todas", int propietarioId = 0)
     {
-        var list = await _repo.GetAllAsync();
-        return View(list);
+        // 1️ Obtener lista completa
+        var lista = await _repo.GetAllAsync();
+        var propietarios = await _propRepo.GetAll();
+
+        // Filtrado por estado (Disponible / Ocupada / Todas)
+        switch (filtro)
+        {
+            case "Disponibles":
+                lista = lista.Where(i => i.Disponible).ToList();
+                break;
+            case "Ocupadas":
+                lista = lista.Where(i => !i.Disponible).ToList();
+                break;
+        }
+
+        //  Filtrado por propietario (si seleccionó uno)
+        if (propietarioId > 0)
+        {
+            lista = lista.Where(i => i.IdPropietario == propietarioId).ToList();
+        }
+
+        //  Pasar datos a la vista
+        ViewBag.Filtro = filtro;
+        ViewBag.PropietarioId = propietarioId;
+        ViewBag.Propietarios = propietarios;
+
+        return View(lista);
     }
+
 
     // GET: /Inmuebles/Details/5
     public async Task<IActionResult> Details(int id)
@@ -40,11 +66,11 @@ public class InmueblesController : Controller
     }
 
     public async Task<IActionResult> Create()
-{
-    var propietarios = await _propRepo.GetAll();
-    ViewBag.Propietarios = propietarios; 
-    return View();
-}
+    {
+        var propietarios = await _propRepo.GetAll();
+        ViewBag.Propietarios = propietarios;
+        return View();
+    }
 
 
     // POST: /Inmuebles/Create

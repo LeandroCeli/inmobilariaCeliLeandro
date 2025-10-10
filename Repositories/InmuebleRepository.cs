@@ -34,7 +34,8 @@ public class InmuebleRepository
                 Ambientes = rd.GetInt32(rd.GetOrdinal("Ambientes")),
                 Precio = rd.GetDecimal(rd.GetOrdinal("Precio")),
                 IdPropietario = rd.GetInt32(rd.GetOrdinal("IdPropietario")),
-                PropietarioNombre = rd.IsDBNull(rd.GetOrdinal("PropietarioNombre")) ? "" : rd.GetString(rd.GetOrdinal("PropietarioNombre"))
+                PropietarioNombre = rd.IsDBNull(rd.GetOrdinal("PropietarioNombre")) ? "" : rd.GetString(rd.GetOrdinal("PropietarioNombre")),
+                 Disponible = rd.GetBoolean(rd.GetOrdinal("Disponible")) 
             });
         }
         return list;

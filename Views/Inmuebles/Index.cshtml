@@ -1,14 +1,66 @@
 @model List<inmobilariaCeli.Models.Inmueble>
 @{
     ViewData["Title"] = "Inmuebles";
+    var propietarios = ViewBag.Propietarios as List<inmobilariaCeli.Models.Propietario>;
+    string filtro = ViewBag.Filtro ?? "Todas";
+    int? propietarioId = ViewBag.PropietarioId;
 }
 
-<h2>Listado de inmuebles</h2>
+<h2 class="mb-4">Listado de Inmuebles</h2>
 
-<a asp-action="Create" class="btn btn-primary mb-3">Nuevo inmueble</a>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="propietario" class="form-label fw-semibold">Propietario</label>
+                @{
+                    var selectedTodosProp = propietarioId == 0 ? "selected" : "";
+                }
+                <select name="propietarioId" id="propietario" class="form-select">
+                    <option value="0" selected="@selectedTodosProp">-- Todos los propietarios --</option>
+                    @if (propietarios != null)
+                    {
+                        foreach (var p in propietarios)
+                        {
+                            var selected = propietarioId == p.Id ? "selected" : "";
+                            <option value="@p.Id" selected="@selected">
+                                @p.Nombre @p.Apellido
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
+            <div class="col-md-3">
+                <label for="filtro" class="form-label fw-semibold">Estado</label>
+                @{
+                    var selectedTodas = filtro == "Todas" ? "selected" : "";
+                    var selectedDisponibles = filtro == "Disponibles" ? "selected" : "";
+                    var selectedOcupadas = filtro == "Ocupadas" ? "selected" : "";
+                }
+                <select name="filtro" id="filtro" class="form-select">
+                    <option value="Todas" selected="@selectedTodas">Todas</option>
+                    <option value="Disponibles" selected="@selectedDisponibles">Disponibles</option>
+                    <option value="Ocupadas" selected="@selectedOcupadas">Ocupadas</option>
+                </select>
+            </div>
+
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+
+            <div class="col-md-3 text-end">
+                <a asp-action="Create" class="btn btn-success">Nuevo inmueble</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
+
+<table class="table table-bordered table-striped align-middle shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Dirección</th>
             <th>Tipo</th>
@@ -16,7 +68,8 @@
             <th>Ambientes</th>
             <th>Precio</th>
             <th>Propietario</th>
-            <th>Acciones</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -30,13 +83,16 @@
                 <td>$@i.Precio</td>
                 <td>@i.PropietarioNombre</td>
                 <td>
+                    <span class="badge @(i.Disponible ? "bg-success" : "bg-danger")">
+                        @(i.Disponible ? "Disponible" : "Ocupada")
+                    </span>
+                </td>
+                <td class="text-center">
                     @if (User.IsInRole("Administrador"))
                     {
-
-                        <a asp-action="Edit" asp-route-id="@i.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Edit" asp-route-id="@i.Id" class="btn btn-sm btn-warning me-1">Editar</a>
                         <a asp-action="Eliminar" asp-route-id="@i.Id" class="btn btn-sm btn-danger">Eliminar</a>
                     }
-
                 </td>
             </tr>
         }
