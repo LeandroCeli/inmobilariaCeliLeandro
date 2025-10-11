@@ -3,17 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-10-2025 a las 15:24:45
+-- Tiempo de generación: 11-10-2025 a las 02:01:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
-
-CREATE DATABASE IF NOT EXISTS InmobiliariaDBCeli
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_general_ci;
-
-USE InmobiliariaDBCeli;
-
-
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -115,7 +107,9 @@ CREATE TABLE `pagos` (
 
 INSERT INTO `pagos` (`Id`, `IdContrato`, `NumeroPago`, `FechaPago`, `Detalle`, `Importe`, `Pagado`, `FechaRegistro`, `UsuarioRegistro`) VALUES
 (1, 1, 1, '2025-10-10', 'Primer Pago', 1000000.00, 1, '2025-10-10 10:21:45', NULL),
-(2, 2, 1, '2025-10-10', 'inicio', 500000.00, 1, '2025-10-10 10:24:03', NULL);
+(2, 2, 1, '2025-10-10', 'inicio', 500000.00, 1, '2025-10-10 10:24:03', NULL),
+(3, 1, 2, '2025-10-10', 'adelanto de pago ', 1000000.00, 1, '2025-10-10 12:05:32', 'admin@inmobiliaria.com'),
+(4, 2, 2, '2025-10-10', '2', 500000.00, 0, '2025-10-10 18:59:35', NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +223,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`Id`, `Email`, `PasswordHash`, `NombreCompleto`, `Rol`, `FotoPerfil`) VALUES
 (3, 'admin@inmobiliaria.com', '$2a$11$PZy/IqArdg1PcvLLyIqQu.JIuJAbvGxHJzPLKlUo38SSW03qe2U12', 'Administrador Inicial', 'Administrador', NULL),
-(7, 'test@inmobiliaria.com', '$2a$11$UBKA19BVnbuWsLr3In0mGeMIxItaz2UJSQE3cPJOtdDj6t3lsb4Oe', 'test', 'Empleado', NULL);
+(9, 'test@inmobiliaria.com', '$2a$11$/J2zHDTaJxyOHE7hrnHC2u98HylHJ1y.8RYNNl9.icKqVDPKcw7HS', 'Empleado 1', '1', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -296,7 +290,7 @@ ALTER TABLE `inquilinos`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `propiedades`
@@ -314,7 +308,7 @@ ALTER TABLE `propietarios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
