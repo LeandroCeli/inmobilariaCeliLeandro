@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("inmobilariaCeli")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+07b4f054f21d1c16d03297d8f6e3454978307b42")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+364f2e4f2a2ca011ca3aa0ba0501debba9a8abf6")]
 [assembly: System.Reflection.AssemblyProductAttribute("inmobilariaCeli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("inmobilariaCeli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
